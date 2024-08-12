@@ -1,48 +1,86 @@
 import streamlit as st
 
-# Dummy user credentials for login
-USERNAME = "user"
-PASSWORD = "pass"
+#---------------------------------------------------------------------------------------------------------------------------------
+### Title and description for your Streamlit app
+#---------------------------------------------------------------------------------------------------------------------------------
+st.set_page_config(page_title="PDF Playground | v0.1",
+                    layout="wide",
+                    page_icon="📘",            
+                    initial_sidebar_state="collapsed")
 
-# Initialize session state for login
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-# Function to display the login form
+#---------------------------------------------------------------------------------------------------------------------------------
+### Authentication Functionality
+#---------------------------------------------------------------------------------------------------------------------------------
 def login():
-    st.title("Login")
+    st.session_state['logged_in'] = True
+
+def logout():
+    st.session_state['logged_in'] = False
+
+def show_login_page():
+    st.markdown("### Please log in to access the app")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     if st.button("Login"):
-        if username == USERNAME and password == PASSWORD:
-            st.session_state.logged_in = True
+        if username == "admin" and password == "password":  # Replace with your own validation logic
+            login()
         else:
-            st.error("Invalid username or password")
+            st.error("Incorrect username or password")
 
-# Function to display the main app after successful login
-def main_app():
-    st.sidebar.button("Sign Out", on_click=sign_out)
-    
-    tab1, tab2, tab3 = st.tabs(["Tab 1", "Tab 2", "Tab 3"])
-    
-    with tab1:
-        st.header("Welcome to Tab 1")
-        # Add your tab 1 content here
-        
-    with tab2:
-        st.header("Welcome to Tab 2")
-        # Add your tab 2 content here
+def show_logout_button():
+    if st.button("Logout"):
+        logout()
 
-    with tab3:
-        st.header("Welcome to Tab 3")
-        # Add your tab 3 content here
+#---------------------------------------------------------------------------------------------------------------------------------
+### Main App Content
+#---------------------------------------------------------------------------------------------------------------------------------
+if 'logged_in' not in st.session_state:
+    st.session_state['logged_in'] = False
 
-def sign_out():
-    st.session_state.logged_in = False
-    st.experimental_set_query_params(logged_in="false")
-
-# Main app logic
-if st.session_state.logged_in:
-    main_app()
+if not st.session_state['logged_in']:
+    show_login_page()
 else:
-    login()
+    show_logout_button()
+    
+    # Main App Content
+    st.title(f""":rainbow[PDF Playground]""")
+
+    st.markdown(
+        '''
+        Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> |
+        for best view of the app, please **zoom-out** the browser to **75%**.
+        ''',
+        unsafe_allow_html=True
+    )
+
+    st.info('''
+        **An easy-to-use, open-source PDF application to preview and extract content and metadata from PDFs, 
+        add or remove passwords, modify, merge, convert, and compress PDFs.**
+    ''', icon="ℹ️")
+
+    st.markdown(
+        '''
+        ---
+        ## **App Features:**
+        - **Preview** PDF files
+        - **Extract** text and images
+        - **Merge** multiple PDFs
+        - **Compress** PDF files
+        - **Protect/Unlock** PDFs
+        - **Convert** PDFs to Word documents
+        - **Rotate/Resize** PDFs
+
+        ---
+        '''
+    )
+
+    st.sidebar.markdown("### PDF Playground | v0.1 Navigation")
+    st.sidebar.markdown("[Home](#)")
+    st.sidebar.markdown("[Preview PDFs](#preview)")
+    st.sidebar.markdown("[Extract Content](#extract)")
+    st.sidebar.markdown("[Merge PDFs](#merge)")
+    st.sidebar.markdown("[Compress PDFs](#compress)")
+    st.sidebar.markdown("[Protect/Unlock PDFs](#protect-unlock)")
+    st.sidebar.markdown("[Convert to Word](#convert)")
+    st.sidebar.markdown("[Rotate/Resize PDFs](#rotate-resize)")
+
