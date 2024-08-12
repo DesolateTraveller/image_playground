@@ -1,50 +1,64 @@
 import streamlit as st
 
-#---------------------------------------------------------------------------------------------------------------------------------
-### Title and description for your Streamlit app
-#---------------------------------------------------------------------------------------------------------------------------------
-st.set_page_config(page_title="PDF Playground | v0.1",
-                    layout="wide",
-                    page_icon="📘",            
-                    initial_sidebar_state="collapsed")
+# Page configuration
+st.set_page_config(
+    page_title="PDF Playground | v0.1",
+    layout="wide",
+    page_icon="📘",
+    initial_sidebar_state="collapsed"
+)
 
-#---------------------------------------------------------------------------------------------------------------------------------
-### Authentication Functionality
-#---------------------------------------------------------------------------------------------------------------------------------
-def login():
-    st.session_state['logged_in'] = True
+# Session state initialization
+if 'authenticated' not in st.session_state:
+    st.session_state['authenticated'] = False
+
+def authenticate(username, password):
+    # Replace these credentials with your own authentication logic
+    return username == "admin" and password == "password"
 
 def logout():
-    st.session_state['logged_in'] = False
+    st.session_state['authenticated'] = False
 
-def show_login_page():
-    st.markdown("### Please log in to access the app")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    if st.button("Login"):
-        if username == "admin" and password == "password":  # Replace with your own validation logic
-            login()
-        else:
-            st.error("Incorrect username or password")
+# Login page
+def login_page():
+    st.markdown("<h2 style='text-align: center;'>🔒 Login to PDF Playground</h2>", unsafe_allow_html=True)
+    with st.form(key='login_form', clear_on_submit=True):
+        username = st.text_input('Username')
+        password = st.text_input('Password', type='password')
+        submit_button = st.form_submit_button('Login')
+        
+        if submit_button:
+            if authenticate(username, password):
+                st.session_state['authenticated'] = True
+                st.experimental_rerun()
+            else:
+                st.error("Invalid credentials. Please try again.")
 
-def show_logout_button():
-    if st.button("Logout"):
-        logout()
-
-#---------------------------------------------------------------------------------------------------------------------------------
-### Main App Content
-#---------------------------------------------------------------------------------------------------------------------------------
-if 'logged_in' not in st.session_state:
-    st.session_state['logged_in'] = False
-
-if not st.session_state['logged_in']:
-    show_login_page()
-else:
-    show_logout_button()
+# Main app page
+def main_page():
+    # Sign-out button at the top right corner
+    st.markdown(
+        """
+        <style>
+        .logout-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            border-radius: 5px;
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     
-    # Main App Content
-    st.title(f""":rainbow[PDF Playground]""")
+    st.markdown('<a href="#" class="logout-button" onClick="logout()">Sign Out</a>', unsafe_allow_html=True)
 
+    st.title(f""":rainbow[PDF Playground]""")
     st.markdown(
         '''
         Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> |
@@ -52,35 +66,9 @@ else:
         ''',
         unsafe_allow_html=True
     )
+    st.info('**An easy-to-use, open-source PDF application to preview and extract content and metadata from PDFs, add or remove passwords, modify, merge, convert and compress PDFs**', icon="ℹ️")
 
-    st.info('''
-        **An easy-to-use, open-source PDF application to preview and extract content and metadata from PDFs, 
-        add or remove passwords, modify, merge, convert, and compress PDFs.**
-    ''', icon="ℹ️")
-
-    st.markdown(
-        '''
-        ---
-        ## **App Features:**
-        - **Preview** PDF files
-        - **Extract** text and images
-        - **Merge** multiple PDFs
-        - **Compress** PDF files
-        - **Protect/Unlock** PDFs
-        - **Convert** PDFs to Word documents
-        - **Rotate/Resize** PDFs
-
-        ---
-        '''
-    )
-
-    st.sidebar.markdown("### PDF Playground | v0.1 Navigation")
-    st.sidebar.markdown("[Home](#)")
-    st.sidebar.markdown("[Preview PDFs](#preview)")
-    st.sidebar.markdown("[Extract Content](#extract)")
-    st.sidebar.markdown("[Merge PDFs](#merge)")
-    st.sidebar.markdown("[Compress PDFs](#compress)")
-    st.sidebar.markdown("[Protect/Unlock PDFs](#protect-unlock)")
-    st.sidebar.markdown("[Convert to Word](#convert)")
-    st.sidebar.markdown("[Rotate/Resize PDFs](#rotate-resize)")
-
+if st.session_state['authenticated']:
+    main_page()
+else:
+    login_page()
