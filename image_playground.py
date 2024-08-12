@@ -37,10 +37,9 @@ def main_app():
         st.header("Welcome to Tab 3")
         # Add your tab 3 content here
 
-# Function to handle sign out
 def sign_out():
     st.session_state.logged_in = False
-    st.experimental_rerun()
+    st.experimental_set_query_params(logged_in="false")
 
 # Main app logic
 if st.session_state.logged_in:
