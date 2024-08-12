@@ -5,13 +5,4 @@ pandas
 matplotlib
 seaborn
 #------------------------
-PyPDF2 
-pdf2image
-fitz
-PyMuPDF
 Pillow
-pikepdf
-poppler-utils
-docx
-pdf2docx
-frontend
