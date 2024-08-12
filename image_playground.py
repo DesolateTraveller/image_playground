@@ -1,48 +1,29 @@
-#---------------------------------------------------------------------------------------------------------------------------------
-### Authenticator
-#---------------------------------------------------------------------------------------------------------------------------------
 import streamlit as st
-#---------------------------------------------------------------------------------------------------------------------------------
-### Import Libraries
-#---------------------------------------------------------------------------------------------------------------------------------
 
-#----------------------------------------
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-#----------------------------------------
-import os
-import sys
-import io
-import traceback
-from PIL import Image
-#----------------------------------------
-from io import BytesIO
-#----------------------------------------
+# User credentials for the login
+USERNAME = "user"
+PASSWORD = "pass"
 
-#---------------------------------------------------------------------------------------------------------------------------------
-### Title and description for your Streamlit app
-#---------------------------------------------------------------------------------------------------------------------------------
-st.set_page_config(page_title="Image Playground | v0.1",
-                    layout="wide",
-                    page_icon="📷",            
-                    initial_sidebar_state="collapsed")
-#----------------------------------------
-st.title(f""":rainbow[Image Playground]""")
-st.markdown(
-    '''
-    Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> |
-    for best view of the app, please **zoom-out** the browser to **75%**.
-    ''',
-    unsafe_allow_html=True)
-#st.info('**An easy-to-use, open-source PDF application to preview and extract content and metadata from PDFs, add or remove passwords, modify, merge, convert and compress PDFs**', icon="ℹ️")
+# Function to verify login credentials
+def verify_login(username, password):
+    return username == USERNAME and password == PASSWORD
 
-#----------------------------------------
+# Streamlit app configuration
+st.set_page_config(page_title="Login App", layout="centered")
 
-#---------------------------------------------------------------------------------------------------------------------------------
-### Functions & Definitions
-#---------------------------------------------------------------------------------------------------------------------------------
+# Title of the app
+st.title("Streamlit Login Form")
 
-#---------------------------------------------------------------------------------------------------------------------------------
-### Main app
+# Login form
+st.subheader("Please log in to access the app")
+username = st.text_input("Username")
+password = st.text_input("Password", type="password")
+
+# Login button
+if st.button("Login"):
+    if verify_login(username, password):
+        st.success("Login successful!")
+        st.write("Welcome to the app!")
+        # Here you can add the rest of your app's code or navigate to a different page
+    else:
+        st.error("Invalid username or password")
