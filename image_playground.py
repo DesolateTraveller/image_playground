@@ -1,74 +1,59 @@
 import streamlit as st
 
+# Define sign out function
+def sign_out():
+    st.session_state.logged_in = False
+    st.experimental_set_query_params(logged_in="false")
+
+# Check if user is logged in
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+
 # Page configuration
-st.set_page_config(
-    page_title="PDF Playground | v0.1",
-    layout="wide",
-    page_icon="📘",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title="PDF Playground | v0.1",
+                    layout="wide",
+                    page_icon="📘",            
+                    initial_sidebar_state="collapsed")
 
-# Session state initialization
-if 'authenticated' not in st.session_state:
-    st.session_state['authenticated'] = False
+# If not logged in, show the login page
+if not st.session_state.logged_in:
+    # Two columns for login page
+    col1, col2 = st.columns(2)
 
-def authenticate(username, password):
-    # Replace these credentials with your own authentication logic
-    return username == "admin" and password == "password"
-
-def logout():
-    st.session_state['authenticated'] = False
-
-# Login page
-def login_page():
-    st.markdown("<h2 style='text-align: center;'>🔒 Login to PDF Playground</h2>", unsafe_allow_html=True)
-    with st.form(key='login_form', clear_on_submit=True):
-        username = st.text_input('Username')
-        password = st.text_input('Password', type='password')
-        submit_button = st.form_submit_button('Login')
-        
-        if submit_button:
-            if authenticate(username, password):
-                st.session_state['authenticated'] = True
-                st.experimental_rerun()
-            else:
-                st.error("Invalid credentials. Please try again.")
-
-# Main app page
-def main_page():
-    # Sign-out button at the top right corner
-    st.markdown(
-        """
-        <style>
-        .logout-button {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            border-radius: 5px;
-            background-color: #f44336;
-            color: white;
-            padding: 5px 10px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    with col1:
+        st.title(f""":rainbow[PDF Playground]""")
+        st.markdown(
+            '''
+            Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> |
+            for best view of the app, please **zoom-out** the browser to **75%**.
+            ''',
+            unsafe_allow_html=True)
+        st.info('**An easy-to-use, open-source PDF application to preview and extract content and metadata from PDFs, add or remove passwords, modify, merge, convert and compress PDFs**', icon="ℹ️")
     
-    st.markdown('<a href="#" class="logout-button" onClick="logout()">Sign Out</a>', unsafe_allow_html=True)
+    with col2:
+        st.subheader("Login to Access PDF Playground")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if st.button("Login"):
+            if username == "admin" and password == "password":  # Simplified for example purposes
+                st.session_state.logged_in = True
+                st.experimental_set_query_params(logged_in="true")
+            else:
+                st.error("Invalid username or password")
 
+# If logged in, show the main app
+if st.session_state.logged_in:
+    # Sign out button on the top right
+    st.sidebar.button("Sign Out", on_click=sign_out)
+    
+    # Main app content
     st.title(f""":rainbow[PDF Playground]""")
     st.markdown(
         '''
         Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> |
         for best view of the app, please **zoom-out** the browser to **75%**.
         ''',
-        unsafe_allow_html=True
-    )
+        unsafe_allow_html=True)
     st.info('**An easy-to-use, open-source PDF application to preview and extract content and metadata from PDFs, add or remove passwords, modify, merge, convert and compress PDFs**', icon="ℹ️")
 
-if st.session_state['authenticated']:
-    main_page()
-else:
-    login_page()
+    # (Add your main app's tabs and functionality here)
