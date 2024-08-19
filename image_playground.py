@@ -48,7 +48,7 @@ st.markdown(
 ### Main app
 #---------------------------------------------------------------------------------------------------------------------------------
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9  = st.tabs(["**Content**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**","**Cmpare**"])
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10  = st.tabs(["**Content**","**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**","**Compare**"])
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Content
