@@ -73,3 +73,18 @@ with tab2:
     if option == "⬆️ Upload an image":
         upload_img = st.file_uploader(label="Upload an image",type=["bmp", "jpg", "jpeg", "png", "svg"],)
         mode = "upload"
+
+    elif option == "📷 Take a photo with my camera":
+        upload_img = st.camera_input(label="Take a picture",)
+        mode = "camera"
+
+    elif option == "Load image from a URL 🌐":
+        url = st.text_input("Image URL",key="url",)
+        mode = "url"
+
+        if url != "":
+            try:
+                response = requests.get(url)
+                upload_img = Image.open(BytesIO(response.content))
+            except:
+                st.error("The URL does not seem to be valid.")
