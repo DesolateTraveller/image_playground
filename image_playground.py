@@ -116,22 +116,19 @@ with contextlib.suppress(NameError):
             col1, col2 = st.columns((0.7, 0.3))
             with col1:
 
-                st.image(img_arr, use_column_width="auto", caption="Original Image")
+                #st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 if st.button("Crop Image"):
                     cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
-                    st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
-                    st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
-                    buffered = BytesIO()
-                    cropped_img.save(buffered, format="PNG")
-                    st.download_button(
-                        label="Download Cropped Image",
-                        data=buffered,
-                        file_name="cropped_image.png",
-                        mime="image/png",
-                    )
-            with col2:
+                    with col2:
+                    
+                        st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
+                        st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
-                if "cropped_img" not in locals():
-                    st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+                        buffered = BytesIO()
+                        cropped_img.save(buffered, format="PNG")
+                        st.download_button(label="Download Cropped Image",data=buffered,file_name="cropped_image.png",mime="image/png",)
+
+                        if "cropped_img" not in locals():
+                            st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
