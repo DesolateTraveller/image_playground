@@ -101,7 +101,7 @@ with contextlib.suppress(NameError):
             col1, col2 = st.columns((0.7,0.3))
             with col1:
         
-                st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
+                st.image(img_arr, use_column_width="True", caption="Uploaded Image")
 
                 with col2:
                      
@@ -123,7 +123,7 @@ with contextlib.suppress(NameError):
 
                     if st.button("Crop Image"):
                     
-                        st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
+                        st.image(cropped_img, use_column_width="True", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
                         buffered = BytesIO()
