@@ -119,7 +119,7 @@ with contextlib.suppress(NameError):
             with col1:
                  
                 cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
-
+                st.image(cropped_img, use_column_width="auto", caption="Uploaded Image")
                 with col2:
                      
                     st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
