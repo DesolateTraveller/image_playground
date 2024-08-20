@@ -83,9 +83,7 @@ elif option == "🌐 Load image from a URL":
                 st.error("The URL does not seem to be valid.")
 with contextlib.suppress(NameError):
     if upload_img is not None:
-        pil_img = (upload_img.convert("RGB")
-        if mode == "url"
-        else Image.open(upload_img).convert("RGB"))
+        pil_img = (upload_img.convert("RGB") if mode == "url" else Image.open(upload_img).convert("RGB"))
         img_arr = np.asarray(pil_img)
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -115,16 +113,25 @@ with contextlib.suppress(NameError):
 
         with tab2:
              
-            col1, col2 = st.columns((0.7,0.3))
+            col1, col2 = st.columns((0.7, 0.3))
             with col1:
-                 
-                cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
-                
-                with col2:
 
-                    if st.checkbox(label="Cropped Image",help="Select to use the cropped image in further operations",key="crop",):
-                        image = cropped_img
-                        st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
+                st.image(img_arr, use_column_width="auto", caption="Original Image")
 
-                    else:
-                        image = Image.fromarray(img_arr)
+                if st.button("Crop Image"):
+                    cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
+                    st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
+                    st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
+
+                    buffered = BytesIO()
+                    cropped_img.save(buffered, format="PNG")
+                    st.download_button(
+                        label="Download Cropped Image",
+                        data=buffered,
+                        file_name="cropped_image.png",
+                        mime="image/png",
+                    )
+            with col2:
+
+                if "cropped_img" not in locals():
+                    st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
