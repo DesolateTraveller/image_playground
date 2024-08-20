@@ -133,7 +133,7 @@ with contextlib.suppress(NameError):
 
                 with col3:
 
-                    if st.button("Crop Image"):
+                    #if st.button("Crop Image"):
                     
                         st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
