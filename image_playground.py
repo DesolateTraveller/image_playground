@@ -116,9 +116,9 @@ with contextlib.suppress(NameError):
             col1, col2, col3 = st.columns((0.1,0.6,0.3))
             with col1:
                  
-                realtime_update = st.checkbox(label="Update in Real Time", value=True)
-                box_color = st.color_picker(label="Box Color", value='#0000FF')
-                aspect_choice = st.radio(label="Aspect Ratio", options=["1:1", "16:9", "4:3", "2:3", "Free"])
+                realtime_update = st.checkbox(label="**update in Real Time**", value=True)
+                box_color = st.color_picker(label="**Box Color**", value='#0000FF')
+                aspect_choice = st.radio(label="**Aspect Ratio**", options=["1:1", "16:9", "4:3", "2:3", "Free"])
                 aspect_dict = {"1:1": (1, 1),"16:9": (16, 9),"4:3": (4, 3),"2:3": (2, 3),"Free": None}
                 aspect_ratio = aspect_dict[aspect_choice]
 
@@ -126,21 +126,21 @@ with contextlib.suppress(NameError):
 
                 img = Image.fromarray(img_arr)
                 if not realtime_update:
-                    st.write("Double click to save crop")
+                    st.write("**Double click to save crop**")
                 cropped_img = st_cropper(img, realtime_update=realtime_update, box_color=box_color,aspect_ratio=aspect_ratio)
                 #st.image(img_arr, use_column_width="auto", caption="Original Image")
                 #cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
 
                 with col3:
 
-                    #if st.button("Crop Image"):
+                    #if st.button("**Crop Image**"):
                     
                         st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
                         buffered = BytesIO()
                         cropped_img.save(buffered, format="PNG")
-                        st.download_button(label="Download Cropped Image",data=buffered,file_name="cropped_image.png",mime="image/png",)
+                        st.download_button(label="**Download Cropped Image**",data=buffered,file_name="cropped_image.png",mime="image/png",)
 
                         if "cropped_img" not in locals():
                             st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
@@ -158,13 +158,13 @@ with contextlib.suppress(NameError):
 
                 with col2:
 
-                    if st.button("Remove Background"):
+                    if st.button("**Remove Background**"):
                         bg_removed_img = remove(pil_img)
                         st.image(bg_removed_img, use_column_width="auto", caption="Background Removed")
 
                         buffered = BytesIO()
                         bg_removed_img.save(buffered, format="PNG")
-                        st.download_button(label="Download Image with Background Removed",data=buffered,file_name="bg_removed_image.png",mime="image/png",)
+                        st.download_button(label="**Download Image with Background Removed**",data=buffered,file_name="bg_removed_image.png",mime="image/png",)
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Mirror
@@ -179,10 +179,77 @@ with contextlib.suppress(NameError):
 
                 with col2:
                      
-                    if st.button("Mirror Image"):
+                    if st.button("**Mirror Image**"):
                         mirrored_img = ImageOps.mirror(pil_img)
                         st.image(mirrored_img, use_column_width="auto", caption="Mirrored Image")
 
                         buffered = BytesIO()
                         mirrored_img.save(buffered, format="PNG")
-                        st.download_button(label="Download Mirrored Image",data=buffered,file_name="mirrored_image.png",mime="image/png",)
+                        st.download_button(label="**Download Mirrored Image**",data=buffered,file_name="mirrored_image.png",mime="image/png",)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+### Convert
+#---------------------------------------------------------------------------------------------------------------------------------
+
+        #with tab5:
+             
+
+#---------------------------------------------------------------------------------------------------------------------------------
+### Rotate
+#---------------------------------------------------------------------------------------------------------------------------------
+
+        with tab6:
+                     
+            col1, col2 = st.columns((0.7, 0.3))
+            with col1:            
+             
+                st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                with col2:
+                     
+                    angle = st.slider("Rotate Image", min_value=0, max_value=360, value=0)
+                    if st.button("**Rotate Image**"):
+                         
+                        rotated_img = pil_img.rotate(angle)
+                        st.image(rotated_img, use_column_width="auto", caption=f"Rotated Image by {angle} degrees")
+        
+                        buffered = BytesIO()
+                        rotated_img.save(buffered, format="PNG")
+                        st.download_button(label="**Download Rotated Image**",data=buffered,file_name="rotated_image.png",mime="image/png",)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+### Change
+#---------------------------------------------------------------------------------------------------------------------------------
+
+        with tab7:
+             
+            col1, col2 = st.columns((0.7, 0.3))
+            with col1:            
+             
+                st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                with col2:
+
+                    brightness = st.slider("Brightness", 0.0, 2.0, 1.0)
+                    enhancer = ImageEnhance.Brightness(pil_img)
+                    bright_img = enhancer.enhance(brightness)
+                    st.image(bright_img, use_column_width="auto", caption="Brightness Adjusted")
+
+                    saturation = st.slider("Saturation", 0.0, 2.0, 1.0)
+                    enhancer = ImageEnhance.Color(pil_img)
+                    saturated_img = enhancer.enhance(saturation)
+                    st.image(saturated_img, use_column_width="auto", caption="Saturation Adjusted")
+
+                    sharpness = st.slider("Sharpness", 0.0, 2.0, 1.0)
+                    enhancer = ImageEnhance.Sharpness(pil_img)
+                    sharp_img = enhancer.enhance(sharpness)
+                    st.image(sharp_img, use_column_width="auto", caption="Sharpness Adjusted")
+
+                    contrast = st.slider("Contrast", 0.0, 2.0, 1.0)
+                    enhancer = ImageEnhance.Contrast(pil_img)
+                    contrast_img = enhancer.enhance(contrast)
+                    st.image(contrast_img, use_column_width="auto", caption="Contrast Adjusted")
+
+                    buffered = BytesIO()
+                    contrast_img.save(buffered, format="PNG")
+                    st.download_button(label="Download Adjusted Image",data=buffered,file_name="adjusted_image.png",mime="image/png",)
