@@ -36,7 +36,7 @@ st.markdown(
     for best view of the app, please **zoom-out** the browser to **75%**.
     ''',
     unsafe_allow_html=True)
-st.info('**A lightweight image-processing streamlit app that supports the following operations: upload image,crop,remove background,mirror,convert,rotate,change brightness**', icon="ℹ️")
+st.info('**A lightweight image-processing streamlit app that supports the following operations: upload image, crop, remove background, mirror, convert, rotate, change brightness**', icon="ℹ️")
 
 #----------------------------------------
 
@@ -63,9 +63,13 @@ with tab2:
     option = st.radio(
     label="Upload an image, take one with your camera, or load image from a URL",
     options=(
-        "⬆️ Upload an image ",
-        "📷 Take a photo with my camera ",
-        "🌐 Load image from a URL ",
+        "⬆️ Upload an image",
+        "📷 Take a photo with my camera",
+        "🌐 Load image from a URL",
     ),
     horizontal=True, label_visibility='collapsed',
     help="Uploaded images are deleted from the server when you\n* upload another image, or\n* clear the file uploader, or\n* close the browser tab",)
+
+    if option == "⬆️ Upload an image":
+        upload_img = st.file_uploader(label="Upload an image",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+        mode = "upload"
