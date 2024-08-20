@@ -50,37 +50,25 @@ st.info('**A lightweight image-processing streamlit app that supports the follow
 ### Main app
 #---------------------------------------------------------------------------------------------------------------------------------
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10  = st.tabs(["**Content**","**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**","**Compare**"])
-
-#---------------------------------------------------------------------------------------------------------------------------------
-### Content
-#---------------------------------------------------------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------------------------------------------------------
-### View
-#---------------------------------------------------------------------------------------------------------------------------------
-
-with tab2:
-
-    option = st.radio(
-    label="Upload an image, take one with your camera, or load image from a URL",
-    options=(
+option = st.radio(
+label="Upload an image, take one with your camera, or load image from a URL",
+options=(
         "⬆️ Upload an image",
         "📷 Take a photo with my camera",
         "🌐 Load image from a URL",
     ),
-    horizontal=True, label_visibility='collapsed',
-    help="Uploaded images are deleted from the server when you\n* upload another image, or\n* clear the file uploader, or\n* close the browser tab",)
+horizontal=True, label_visibility='collapsed',
+help="Uploaded images are deleted from the server when you\n* upload another image, or\n* clear the file uploader, or\n* close the browser tab",)
 
-    if option == "⬆️ Upload an image":
+if option == "⬆️ Upload an image":
         upload_img = st.file_uploader(label="Upload an image",type=["bmp", "jpg", "jpeg", "png", "svg"],)
         mode = "upload"
 
-    elif option == "📷 Take a photo with my camera":
+elif option == "📷 Take a photo with my camera":
         upload_img = st.camera_input(label="Take a picture",)
         mode = "camera"
 
-    elif option == "🌐 Load image from a URL":
+elif option == "🌐 Load image from a URL":
         url = st.text_input("Image URL",key="url",)
         mode = "url"
 
@@ -91,7 +79,18 @@ with tab2:
             except:
                 st.error("The URL does not seem to be valid.")
 
-    st.divider()
+
+#---------------------------------------------------------------------------------------------------------------------------------
+### Content
+#---------------------------------------------------------------------------------------------------------------------------------
+
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(["**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**","**Compare**"])
+
+#---------------------------------------------------------------------------------------------------------------------------------
+### View
+#---------------------------------------------------------------------------------------------------------------------------------
+
+with tab1:
     with contextlib.suppress(NameError):
         if upload_img is not None:
             pil_img = (upload_img.convert("RGB")
@@ -101,4 +100,6 @@ with tab2:
 
             st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
             st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+
+
 
