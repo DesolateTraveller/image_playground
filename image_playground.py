@@ -117,11 +117,11 @@ with contextlib.suppress(NameError):
             with col1:
 
                 #st.image(img_arr, use_column_width="auto", caption="Original Image")
+                cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
 
-                if st.button("Crop Image"):
-                    cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
+                with col2:
 
-                    with col2:
+                    if st.button("Crop Image"):
                     
                         st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
