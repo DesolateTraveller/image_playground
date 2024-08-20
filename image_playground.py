@@ -18,11 +18,14 @@ import io
 import requests
 import traceback
 import contextlib
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageOps
 #----------------------------------------
 from io import BytesIO
 #----------------------------------------
-
+from rembg import remove
+from st_social_media_links import SocialMediaIcons
+from streamlit_cropper import st_cropper
+from streamlit_image_comparison import image_comparison
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Title and description for your Streamlit app
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -39,7 +42,7 @@ st.markdown(
     ''',
     unsafe_allow_html=True)
 st.info('**A lightweight image-processing streamlit app that supports the following operations: upload image, crop, remove background, mirror, convert, rotate, change brightness**', icon="ℹ️")
-
+st.divider()
 #----------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -49,7 +52,7 @@ st.info('**A lightweight image-processing streamlit app that supports the follow
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Main app
 #---------------------------------------------------------------------------------------------------------------------------------
-
+st.
 option = st.radio(
 label="Upload an image, take one with your camera, or load image from a URL",
 options=(
@@ -78,28 +81,45 @@ elif option == "🌐 Load image from a URL":
                 upload_img = Image.open(BytesIO(response.content))
             except:
                 st.error("The URL does not seem to be valid.")
-
+with contextlib.suppress(NameError):
+    if upload_img is not None:
+        pil_img = (upload_img.convert("RGB")
+        if mode == "url"
+        else Image.open(upload_img).convert("RGB"))
+        img_arr = np.asarray(pil_img)
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Content
 #---------------------------------------------------------------------------------------------------------------------------------
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(["**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**","**Compare**"])
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(["**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**","**Compare**"])
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### View
 #---------------------------------------------------------------------------------------------------------------------------------
 
-with tab1:
-    with contextlib.suppress(NameError):
-        if upload_img is not None:
-            pil_img = (upload_img.convert("RGB")
-            if mode == "url"
-            else Image.open(upload_img).convert("RGB"))
-            img_arr = np.asarray(pil_img)
+        with tab1:
 
-            st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
-            st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+            col1, col2 = st.columns((0.7,0.3))
+            with col1:
+        
+                st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
 
+                with col2:
+                     
+                    st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
 
+#---------------------------------------------------------------------------------------------------------------------------------
+### Crop
+#---------------------------------------------------------------------------------------------------------------------------------
 
+        with tab2:
+             
+            col1, col2 = st.columns((0.7,0.3))
+            with col1:
+                 
+                cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
+
+                with col2:
+                     
+                    st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
