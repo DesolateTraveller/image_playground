@@ -80,7 +80,7 @@ with tab2:
         upload_img = st.camera_input(label="Take a picture",)
         mode = "camera"
 
-    elif option == "Load image from a URL 🌐":
+    elif option == "🌐 Load image from a URL":
         url = st.text_input("Image URL",key="url",)
         mode = "url"
 
@@ -100,5 +100,5 @@ with tab2:
             img_arr = np.asarray(pil_img)
 
             st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
-            st.text(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+            st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
 
