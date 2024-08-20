@@ -22,7 +22,7 @@ from PIL import Image, ImageEnhance, ImageOps
 #----------------------------------------
 from io import BytesIO
 #----------------------------------------
-from rembg import remove
+#from rembg import remove
 from st_social_media_links import SocialMediaIcons
 from streamlit_cropper import st_cropper
 from streamlit_image_comparison import image_comparison
@@ -101,7 +101,7 @@ with contextlib.suppress(NameError):
             col1, col2 = st.columns((0.7,0.3))
             with col1:
         
-                st.image(img_arr, use_column_width="True", caption="Uploaded Image")
+                st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
 
                 with col2:
                      
@@ -123,7 +123,7 @@ with contextlib.suppress(NameError):
 
                     if st.button("Crop Image"):
                     
-                        st.image(cropped_img, use_column_width="True", caption="Cropped Image")
+                        st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
                         buffered = BytesIO()
@@ -132,3 +132,45 @@ with contextlib.suppress(NameError):
 
                         if "cropped_img" not in locals():
                             st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+
+#---------------------------------------------------------------------------------------------------------------------------------
+### Remove
+#---------------------------------------------------------------------------------------------------------------------------------
+
+        with tab3:
+
+            col1, col2 = st.columns((0.7, 0.3))
+            with col1:
+             
+                st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                with col2:
+
+                    if st.button("Remove Background"):
+                        bg_removed_img = remove(pil_img)
+                        st.image(bg_removed_img, use_column_width="auto", caption="Background Removed")
+
+                        buffered = BytesIO()
+                        bg_removed_img.save(buffered, format="PNG")
+                        st.download_button(label="Download Image with Background Removed",data=buffered,file_name="bg_removed_image.png",mime="image/png",)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+### Mirror
+#---------------------------------------------------------------------------------------------------------------------------------
+
+        with tab4:
+                         
+            col1, col2 = st.columns((0.7, 0.3))
+            with col1:
+             
+                st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                with col2:
+                     
+                    if st.button("Mirror Image"):
+                        mirrored_img = ImageOps.mirror(pil_img)
+                        st.image(mirrored_img, use_column_width="auto", caption="Mirrored Image")
+
+                        buffered = BytesIO()
+                        mirrored_img.save(buffered, format="PNG")
+                        st.download_button(label="Download Mirrored Image",data=buffered,file_name="mirrored_image.png",mime="image/png",)
