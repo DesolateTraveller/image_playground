@@ -15,7 +15,9 @@ import matplotlib.pyplot as plt
 import os
 import sys
 import io
+import requests
 import traceback
+import contextlib
 from PIL import Image
 #----------------------------------------
 from io import BytesIO
@@ -88,3 +90,15 @@ with tab2:
                 upload_img = Image.open(BytesIO(response.content))
             except:
                 st.error("The URL does not seem to be valid.")
+
+    st.divider()
+    with contextlib.suppress(NameError):
+        if upload_img is not None:
+            pil_img = (upload_img.convert("RGB")
+            if mode == "url"
+            else Image.open(upload_img).convert("RGB"))
+            img_arr = np.asarray(pil_img)
+
+            st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
+            st.text(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+
