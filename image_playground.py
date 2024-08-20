@@ -231,25 +231,16 @@ with contextlib.suppress(NameError):
                 with col2:
 
                     brightness = st.slider("Brightness", 0.0, 2.0, 1.0)
-                    enhancer = ImageEnhance.Brightness(pil_img)
-                    bright_img = enhancer.enhance(brightness)
-                    st.image(bright_img, use_column_width="auto", caption="Brightness Adjusted")
-
                     saturation = st.slider("Saturation", 0.0, 2.0, 1.0)
-                    enhancer = ImageEnhance.Color(pil_img)
-                    saturated_img = enhancer.enhance(saturation)
-                    st.image(saturated_img, use_column_width="auto", caption="Saturation Adjusted")
-
                     sharpness = st.slider("Sharpness", 0.0, 2.0, 1.0)
-                    enhancer = ImageEnhance.Sharpness(pil_img)
-                    sharp_img = enhancer.enhance(sharpness)
-                    st.image(sharp_img, use_column_width="auto", caption="Sharpness Adjusted")
-
                     contrast = st.slider("Contrast", 0.0, 2.0, 1.0)
-                    enhancer = ImageEnhance.Contrast(pil_img)
-                    contrast_img = enhancer.enhance(contrast)
-                    st.image(contrast_img, use_column_width="auto", caption="Contrast Adjusted")
+
+                    enhanced_img = ImageEnhance.Brightness(pil_img).enhance(brightness)
+                    enhanced_img = ImageEnhance.Color(enhanced_img).enhance(saturation)
+                    enhanced_img = ImageEnhance.Sharpness(enhanced_img).enhance(sharpness)
+                    enhanced_img = ImageEnhance.Contrast(enhanced_img).enhance(contrast)
+                    st.image(enhanced_img, use_column_width="auto", caption="Contrast Adjusted")
 
                     buffered = BytesIO()
-                    contrast_img.save(buffered, format="PNG")
-                    st.download_button(label="Download Adjusted Image",data=buffered,file_name="adjusted_image.png",mime="image/png",)
+                    enhanced_img.save(buffered, format="PNG")
+                    st.download_button(label="**Download Adjusted Image**",data=buffered,file_name="adjusted_image.png",mime="image/png",)
