@@ -272,7 +272,7 @@ with contextlib.suppress(NameError):
                         buffered = BytesIO()
                         grey_img.save(buffered, format="PNG")
                         st.download_button(label="**Download Greyscale Image**",data=buffered,file_name="greyscale_image.png",mime="image/png",)
-                        
+
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Rotate
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -309,10 +309,12 @@ with contextlib.suppress(NameError):
 
                 with col2:
 
-                    brightness = st.slider("Brightness", 0.0, 2.0, 1.0)
-                    saturation = st.slider("Saturation", 0.0, 2.0, 1.0)
-                    sharpness = st.slider("Sharpness", 0.0, 2.0, 1.0)
-                    contrast = st.slider("Contrast", 0.0, 2.0, 1.0)
+                    stats_expander = st.expander("**:blue[App Capabilities]**", expanded=False)
+                    with stats_expander:
+                        brightness = st.slider("Brightness", 0.0, 2.0, 1.0)
+                        saturation = st.slider("Saturation", 0.0, 2.0, 1.0)
+                        sharpness = st.slider("Sharpness", 0.0, 2.0, 1.0)
+                        contrast = st.slider("Contrast", 0.0, 2.0, 1.0)
 
                     enhanced_img = ImageEnhance.Brightness(pil_img).enhance(brightness)
                     enhanced_img = ImageEnhance.Color(enhanced_img).enhance(saturation)
