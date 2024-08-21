@@ -248,9 +248,31 @@ with contextlib.suppress(NameError):
 ### Convert
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        #with tab5:
+        with tab5:
+                                  
+            col1, col2 = st.columns((0.7, 0.3))
+            with col1:            
              
+                st.image(img_arr, use_column_width="auto", caption="Original Image")
 
+                with col2:
+                     
+                    conv_option = st.radio('Options', ['BW','Greyscale'], horizontal=True, label_visibility='collapsed', key='conv_option')
+
+                    if conv_option == "BW":
+                        bw_img = pil_img.convert("1")  
+                        st.image(bw_img, use_column_width="auto", caption="Black & White Image")
+                        buffered = BytesIO()
+                        bw_img.save(buffered, format="PNG")
+                        st.download_button(label="**Download Black & White Image**",data=buffered,file_name="black_white_image.png",mime="image/png",)
+
+                    if conv_option == "Greyscale":
+                        grey_img = pil_img.convert("L") 
+                        st.image(grey_img, use_column_width="auto", caption="Greyscale Image")
+                        buffered = BytesIO()
+                        grey_img.save(buffered, format="PNG")
+                        st.download_button(label="**Download Greyscale Image**",data=buffered,file_name="greyscale_image.png",mime="image/png",)
+                        
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Rotate
 #---------------------------------------------------------------------------------------------------------------------------------
