@@ -10,3 +10,5 @@ rembg
 st_social_media_links
 streamlit-image-comparison
 streamlit_cropper
+#------------------------
+cv2
