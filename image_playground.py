@@ -143,6 +143,24 @@ with contextlib.suppress(NameError):
         pil_img = (upload_img.convert("RGB") if mode == "url" else Image.open(upload_img).convert("RGB"))
         img_arr = np.asarray(pil_img)
 
+        if mode == "upload":
+            file_details = {
+                "File Name": upload_img.name,
+                "File Size (KB)": round(os.path.getsize(upload_img.name) / 1024, 2),
+                "Format": pil_img.format,
+                "Mode": pil_img.mode,
+                "Width (px)": pil_img.size[0],
+                "Height (px)": pil_img.size[1],}
+        else:
+            file_details = {
+                "File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                "File Size (KB)": "N/A",
+                "Format": pil_img.format,
+                "Mode": pil_img.mode,
+                "Width (px)": pil_img.size[0],
+                "Height (px)": pil_img.size[1],
+                }
+
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Content
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -162,6 +180,9 @@ with contextlib.suppress(NameError):
 
                 with col2:
                      
+                    st.write("### Metadata Information")
+                    for key, value in file_details.items():
+                        st.write(f"**{key}:** {value}")
                     st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
 
 #---------------------------------------------------------------------------------------------------------------------------------
