@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 from PIL import Image, ImageDraw
 from skimage import color, filters, measure, morphology, draw
+import pandas as pd
 
 def process_image(image):
     # Convert image to grayscale
@@ -69,12 +70,26 @@ def main():
         # Draw contours and diameters on the image
         output_image = draw_contours(image, properties, diameters)
         
-        # Display the results
+        # Display the processed image with contours
         st.image(output_image, caption=f"Detected Molecules: {len(diameters)}", use_column_width=True)
         
-        # Display diameters
-        st.write("Diameters of detected molecules (in pixels):")
-        st.write(diameters)
+        # Convert diameters list to a DataFrame
+        df = pd.DataFrame(diameters, columns=["Diameter (px)"])
+        
+        # Calculate and display maximum and minimum diameters
+        max_diameter = df["Diameter (px)"].max()
+        min_diameter = df["Diameter (px)"].min()
+        
+        st.write("**Diameter Statistics:**")
+        st.write(f"Maximum Diameter: {max_diameter:.2f} px")
+        st.write(f"Minimum Diameter: {min_diameter:.2f} px")
+        
+        # Highlight the row with maximum and minimum diameters in the table
+        df['Type'] = ['Max' if d == max_diameter else 'Min' if d == min_diameter else '' for d in df["Diameter (px)"]]
+        
+        # Display the DataFrame as a table
+        st.write("**Diameters of detected molecules (in pixels):**")
+        st.dataframe(df.style.highlight_max(subset=['Diameter (px)'], color='lightgreen').highlight_min(subset=['Diameter (px)'], color='lightcoral'))
 
 if __name__ == "__main__":
     main()
