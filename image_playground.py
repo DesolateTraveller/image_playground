@@ -1,8 +1,7 @@
 import streamlit as st
 import numpy as np
 from PIL import Image, ImageDraw
-from skimage import color, filters, measure, morphology
-from skimage.draw import circle_perimeter
+from skimage import color, filters, measure, morphology, draw
 
 def process_image(image):
     # Convert image to grayscale
@@ -34,13 +33,22 @@ def calculate_diameters(labeled_image):
 
 def draw_contours(image, properties, diameters):
     output = Image.fromarray(image)
-    draw = ImageDraw.Draw(output)
+    draw_output = ImageDraw.Draw(output)
     for prop, diameter in zip(properties, diameters):
         y, x = prop.centroid
         radius = diameter / 2
-        rr, cc = circle_perimeter(int(y), int(x), int(radius), shape=image.shape)
-        output.putpixel((cc, rr), (0, 255, 0))  # Green circle
-        draw.text((x - 20, y - 20), f'{int(diameter)}px', fill=(255, 0, 0))  # Red text
+        
+        # Get the coordinates of the circle's perimeter
+        rr, cc = draw.circle_perimeter(int(y), int(x), int(radius), shape=image.shape)
+        
+        # Draw the circle perimeter
+        for r, c in zip(rr, cc):
+            if 0 <= r < image.shape[0] and 0 <= c < image.shape[1]:
+                output.putpixel((c, r), (0, 255, 0))  # Green circle
+
+        # Draw the diameter text
+        draw_output.text((x - 20, y - 20), f'{int(diameter)}px', fill=(255, 0, 0))  # Red text
+    
     return output
 
 def main():
