@@ -309,7 +309,7 @@ with contextlib.suppress(NameError):
 
                 with col2:
 
-                    stats_expander = st.expander("**:blue[App Capabilities]**", expanded=False)
+                    stats_expander = st.expander("**:blue[Tuner]**", expanded=False)
                     with stats_expander:
                         brightness = st.slider("Brightness", 0.0, 2.0, 1.0)
                         saturation = st.slider("Saturation", 0.0, 2.0, 1.0)
