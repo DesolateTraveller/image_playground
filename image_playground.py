@@ -1,41 +1,46 @@
 import streamlit as st
-import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
+from skimage import color, filters, measure, morphology
+from skimage.draw import circle_perimeter
 
 def process_image(image):
-    # Convert the image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Convert image to grayscale
+    gray_image = color.rgb2gray(image)
     
-    # Apply Gaussian Blur to reduce noise and improve contour detection
-    blurred = cv2.GaussianBlur(gray, (11, 11), 0)
+    # Apply Gaussian filter to reduce noise
+    blurred_image = filters.gaussian(gray_image, sigma=2.0)
     
-    # Apply thresholding to create a binary image
-    _, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
+    # Apply Otsu's thresholding
+    thresh = filters.threshold_otsu(blurred_image)
+    binary_image = blurred_image < thresh
     
-    # Find contours of the molecules
-    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Remove small objects and noise
+    cleaned_image = morphology.remove_small_objects(binary_image, min_size=100)
     
-    return contours
+    # Label the connected regions in the binary image
+    labeled_image = measure.label(cleaned_image)
+    
+    return labeled_image
 
-def calculate_diameters(contours):
+def calculate_diameters(labeled_image):
     diameters = []
-    for contour in contours:
-        # Calculate the enclosing circle diameter
-        (x, y), radius = cv2.minEnclosingCircle(contour)
-        diameter = 2 * radius
+    properties = measure.regionprops(labeled_image)
+    for prop in properties:
+        # Calculate the equivalent diameter
+        diameter = prop.equivalent_diameter
         diameters.append(diameter)
-    return diameters
+    return diameters, properties
 
-def draw_contours(image, contours, diameters):
-    output = image.copy()
-    for contour, diameter in zip(contours, diameters):
-        (x, y), radius = cv2.minEnclosingCircle(contour)
-        center = (int(x), int(y))
-        radius = int(radius)
-        cv2.circle(output, center, radius, (0, 255, 0), 2)
-        cv2.putText(output, f'{int(diameter)}px', (center[0] - 20, center[1] - 20), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+def draw_contours(image, properties, diameters):
+    output = Image.fromarray(image)
+    draw = ImageDraw.Draw(output)
+    for prop, diameter in zip(properties, diameters):
+        y, x = prop.centroid
+        radius = diameter / 2
+        rr, cc = circle_perimeter(int(y), int(x), int(radius), shape=image.shape)
+        output.putpixel((cc, rr), (0, 255, 0))  # Green circle
+        draw.text((x - 20, y - 20), f'{int(diameter)}px', fill=(255, 0, 0))  # Red text
     return output
 
 def main():
@@ -48,16 +53,16 @@ def main():
         image = np.array(Image.open(uploaded_file))
         
         # Process the image to find contours
-        contours = process_image(image)
+        labeled_image = process_image(image)
         
         # Calculate diameters of the molecules
-        diameters = calculate_diameters(contours)
+        diameters, properties = calculate_diameters(labeled_image)
         
         # Draw contours and diameters on the image
-        output_image = draw_contours(image, contours, diameters)
+        output_image = draw_contours(image, properties, diameters)
         
         # Display the results
-        st.image(output_image, caption=f"Detected Molecules: {len(contours)}", use_column_width=True)
+        st.image(output_image, caption=f"Detected Molecules: {len(diameters)}", use_column_width=True)
         
         # Display diameters
         st.write("Diameters of detected molecules (in pixels):")
