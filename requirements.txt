@@ -1,7 +1,14 @@
 streamlit
 #------------------------
 numpy
+pandas
+matplotlib
+seaborn
 #------------------------
 Pillow
+#rembg
+st_social_media_links
+streamlit-image-comparison
+streamlit_cropper
 #------------------------
-opencv-python==4
+scikit-image
