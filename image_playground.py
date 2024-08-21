@@ -175,15 +175,16 @@ with contextlib.suppress(NameError):
 
             col1, col2 = st.columns((0.7,0.3))
             with col1:
-        
+                
+                st.subheader("Image", divider='blue')
                 st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
 
                 with col2:
                      
-                    st.write("### Metadata Information")
+                    st.subheader("Information", divider='blue')
                     for key, value in file_details.items():
                         st.write(f"**{key}:** {value}")
-                    st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+                    #st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Crop
@@ -202,6 +203,7 @@ with contextlib.suppress(NameError):
 
             with col2:
 
+                st.subheader("Image", divider='blue')
                 img = Image.fromarray(img_arr)
                 if not realtime_update:
                     st.write("**Double click to save crop**")
@@ -231,7 +233,8 @@ with contextlib.suppress(NameError):
 
             col1, col2 = st.columns((0.7, 0.3))
             with col1:
-             
+
+                st.subheader("Image", divider='blue')             
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
@@ -252,7 +255,8 @@ with contextlib.suppress(NameError):
                          
             col1, col2 = st.columns((0.7, 0.3))
             with col1:
-             
+
+                st.subheader("Image", divider='blue')             
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
@@ -273,7 +277,8 @@ with contextlib.suppress(NameError):
                                   
             col1, col2 = st.columns((0.7, 0.3))
             with col1:            
-             
+
+                st.subheader("Image", divider='blue')             
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
@@ -302,7 +307,8 @@ with contextlib.suppress(NameError):
                      
             col1, col2 = st.columns((0.7, 0.3))
             with col1:            
-             
+
+                st.subheader("Image", divider='blue')             
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
@@ -325,7 +331,8 @@ with contextlib.suppress(NameError):
              
             col1, col2 = st.columns((0.7, 0.3))
             with col1:            
-             
+
+                st.subheader("Image", divider='blue')             
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
