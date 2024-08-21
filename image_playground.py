@@ -194,7 +194,8 @@ with contextlib.suppress(NameError):
              
             col1, col2, col3 = st.columns((0.1,0.6,0.3))
             with col1:
-                 
+
+                st.subheader("Parameters", divider='blue')                 
                 realtime_update = st.checkbox(label="**update in Real Time**", value=True)
                 box_color = st.color_picker(label="**Box Color**", value='#0000FF')
                 aspect_choice = st.radio(label="**Aspect Ratio**", options=["1:1", "16:9", "4:3", "2:3", "Free"])
@@ -214,7 +215,7 @@ with contextlib.suppress(NameError):
                 with col3:
 
                     #if st.button("**Crop Image**"):
-                    
+                        st.subheader("Output", divider='blue')                      
                         st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
@@ -238,7 +239,8 @@ with contextlib.suppress(NameError):
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
-
+                        
+                    st.subheader("Output", divider='blue')  
                     if st.button("**Remove Background**"):
                         bg_removed_img = remove(pil_img)
                         st.image(bg_removed_img, use_column_width="auto", caption="Background Removed")
@@ -260,7 +262,8 @@ with contextlib.suppress(NameError):
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
-                     
+
+                    st.subheader("Output", divider='blue')                       
                     if st.button("**Mirror Image**"):
                         mirrored_img = ImageOps.mirror(pil_img)
                         st.image(mirrored_img, use_column_width="auto", caption="Mirrored Image")
@@ -282,7 +285,8 @@ with contextlib.suppress(NameError):
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
-                     
+
+                    st.subheader("Output", divider='blue')                       
                     conv_option = st.radio('Options', ['BW','Greyscale'], horizontal=True, label_visibility='collapsed', key='conv_option')
 
                     if conv_option == "BW":
@@ -312,7 +316,8 @@ with contextlib.suppress(NameError):
                 st.image(img_arr, use_column_width="auto", caption="Original Image")
 
                 with col2:
-                     
+
+                    st.subheader("Output", divider='blue')                       
                     angle = st.slider("Rotate Image", min_value=0, max_value=360, value=0)
                     if st.button("**Rotate Image**"):
                          
@@ -337,6 +342,7 @@ with contextlib.suppress(NameError):
 
                 with col2:
 
+                    st.subheader("Output", divider='blue')  
                     stats_expander = st.expander("**:blue[Tuner]**", expanded=False)
                     with stats_expander:
                         brightness = st.slider("Brightness", 0.0, 2.0, 1.0)
