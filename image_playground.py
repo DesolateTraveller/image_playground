@@ -146,7 +146,7 @@ with contextlib.suppress(NameError):
         if mode == "upload":
             file_details = {
                 "File Name": upload_img.name,
-                "File Size (KB)": round(os.path.getsize(upload_img.name) / 1024, 2),
+                "File Size (KB)": round(upload_img.size / 1024, 2),
                 "Format": pil_img.format,
                 "Mode": pil_img.mode,
                 "Width (px)": pil_img.size[0],
