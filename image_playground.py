@@ -21,12 +21,12 @@ from PIL import Image
 from io import BytesIO
 #----------------------------------------
 #import fitz
-import pikepdf
-from docx import Document
-from pdf2docx import Converter
-from PyPDF2 import PdfMerger, PdfReader, PdfWriter
-from pdf2image import convert_from_path, convert_from_bytes
-from pdf2image.exceptions import PDFInfoNotInstalledError,PDFPageCountError,PDFSyntaxError
+#import pikepdf
+#from docx import Document
+#from pdf2docx import Converter
+#from PyPDF2 import PdfMerger, PdfReader, PdfWriter
+#from pdf2image import convert_from_path, convert_from_bytes
+#from pdf2image.exceptions import PDFInfoNotInstalledError,PDFPageCountError,PDFSyntaxError
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Title and description for your Streamlit app
 #---------------------------------------------------------------------------------------------------------------------------------
