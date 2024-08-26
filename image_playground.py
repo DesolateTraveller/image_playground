@@ -121,15 +121,15 @@ horizontal=True, label_visibility='collapsed',
 help="Uploaded images are deleted from the server when you\n* upload another image, or\n* clear the file uploader, or\n* close the browser tab",)
 
 if option == "⬆️ Upload an image":
-        upload_img = st.file_uploader(label="Upload an image",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+        upload_img = st.file_uploader(label="**Upload an image**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
         mode = "upload"
 
 elif option == "📷 Take a photo with my camera":
-        upload_img = st.camera_input(label="Take a picture",)
+        upload_img = st.camera_input(label="**Take a picture**",)
         mode = "camera"
 
 elif option == "🌐 Load image from a URL":
-        url = st.text_input("Image URL",key="url",)
+        url = st.text_input("**Image URL**",key="url",)
         mode = "url"
 
         if url != "":
@@ -196,7 +196,11 @@ with contextlib.suppress(NameError):
 #---------------------------------------------------------------------------------------------------------------------------------
 
         with tab2:
-             
+
+            st.write("""
+            The **Crop** tab is designed to crop the uploaded image files. 
+            You can upload or take photo using camera of load from a URL of an image and the tool will help to crop the image file.
+            """) 
             col1, col2, col3 = st.columns((0.1,0.6,0.3))
             with col1:
 
@@ -237,7 +241,11 @@ with contextlib.suppress(NameError):
 
         with tab3:
 
-            col1, col2 = st.columns((0.7, 0.3))
+            st.write("""
+            The **Remove** tab is designed to remove the background of the uploaded image files. 
+            You can upload or take photo using camera of load from a URL of an image and the tool will help to remove the background of the image file.
+            """) 
+            col1, col2 = st.columns((0.6, 0.4))
             with col1:
 
                 st.subheader("Image", divider='blue')             
@@ -259,8 +267,12 @@ with contextlib.suppress(NameError):
 #---------------------------------------------------------------------------------------------------------------------------------
 
         with tab4:
-                         
-            col1, col2 = st.columns((0.7, 0.3))
+
+            st.write("""
+            The **Mirror** tab is designed to mirror the uploaded image files. 
+            You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.
+            """)                          
+            col1, col2 = st.columns((0.6, 0.4))
             with col1:
 
                 st.subheader("Image", divider='blue')             
@@ -282,8 +294,12 @@ with contextlib.suppress(NameError):
 #---------------------------------------------------------------------------------------------------------------------------------
 
         with tab5:
-                                  
-            col1, col2 = st.columns((0.7, 0.3))
+
+            st.write("""
+            The **Convert** tab is designed to convert of the uploaded image files. 
+            You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.
+            """)                                   
+            col1, col2 = st.columns((0.6, 0.4))
             with col1:            
 
                 st.subheader("Image", divider='blue')             
@@ -313,8 +329,12 @@ with contextlib.suppress(NameError):
 #---------------------------------------------------------------------------------------------------------------------------------
 
         with tab6:
-                     
-            col1, col2 = st.columns((0.7, 0.3))
+
+            st.write("""
+            The **Rotate** tab is designed to rotate of the uploaded image files. 
+            You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.
+            """)                     
+            col1, col2 = st.columns((0.6, 0.4))
             with col1:            
 
                 st.subheader("Image", divider='blue')             
@@ -338,8 +358,12 @@ with contextlib.suppress(NameError):
 #---------------------------------------------------------------------------------------------------------------------------------
 
         with tab7:
-             
-            col1, col2 = st.columns((0.7, 0.3))
+
+            st.write("""
+            The **Change** tab is designed to change the properties of the uploaded image files. 
+            You can upload or take photo using camera of load from a URL of an image and the tool will help to change the properties (e.g, brightness,saturation, sharpness, contrast) of the image file.
+            """)                 
+            col1, col2 = st.columns((0.6, 0.4))
             with col1:            
 
                 st.subheader("Image", divider='blue')             
