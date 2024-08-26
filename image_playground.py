@@ -138,6 +138,7 @@ elif option == "🌐 Load image from a URL":
                 upload_img = Image.open(BytesIO(response.content))
             except:
                 st.error("The URL does not seem to be valid.")
+                
 with contextlib.suppress(NameError):
     if upload_img is not None:
         pil_img = (upload_img.convert("RGB") if mode == "url" else Image.open(upload_img).convert("RGB"))
@@ -173,7 +174,11 @@ with contextlib.suppress(NameError):
 
         with tab1:
 
-            col1, col2 = st.columns((0.7,0.3))
+            st.write("""
+            The **View** tab allows you to preview image files directly within the application. 
+            You can upload or take photo using camera of load from a URL of an image and view its content without needing any external software.
+            """)
+            col1, col2 = st.columns((0.8,0.2))
             with col1:
                 
                 st.subheader("Image", divider='blue')
