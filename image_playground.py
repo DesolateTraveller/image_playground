@@ -35,16 +35,44 @@ st.set_page_config(page_title="Image Playground | v0.1",
                     initial_sidebar_state="collapsed")
 #----------------------------------------
 st.title(f""":rainbow[Image Playground]""")
-st.markdown(
-    '''
-    Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> ( 📑 [Resume](https://resume-avijitc.streamlit.app/) | :bust_in_silhouette: [LinkedIn](https://www.linkedin.com/in/avijit2403/) | :computer: [GitHub](https://github.com/DesolateTraveller) ) |
-    for best view of the app, please **zoom-out** the browser to **75%**.
-    ''',
-    unsafe_allow_html=True)
-st.info('**A lightweight image-processing streamlit app that supports the following operations: upload image, crop, remove background, mirror, convert, rotate, change brightness**', icon="ℹ️")
+#st.markdown(
+    #'''
+    #Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> ( 📑 [Resume](https://resume-avijitc.streamlit.app/) | :bust_in_silhouette: [LinkedIn](https://www.linkedin.com/in/avijit2403/) | :computer: [GitHub](https://github.com/DesolateTraveller) ) |
+    #for best view of the app, please **zoom-out** the browser to **75%**.
+    #''',
+    #unsafe_allow_html=True)
+#st.info('**A lightweight image-processing streamlit app that supports the following operations: upload image, crop, remove background, mirror, convert, rotate, change brightness**', icon="ℹ️")
 #st.divider()
 #----------------------------------------
+st.markdown(
+    """
+    <style>
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+        color: #333;
+        z-index: 100;
+    }
+    .footer p {
+        margin: 0;
+    }
+    .footer .highlight {
+        font-weight: bold;
+        color: blue;
+    }
+    </style>
 
+    <div class="footer">
+        <p>© 2024 | Developed by: <span class="highlight">Avijit Chakraborty</span> | Contact : <a href="mailtoavijit.mba18@gmail.com">Avijit Chakraborty</a></p> <span class="highlight">Thank you for visiting the app | This app is created for internal use, unauthorized uses or copying is strictly prohibited</span>
+    </div>
+    """,
+    unsafe_allow_html=True)
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Functions & Definitions
 #---------------------------------------------------------------------------------------------------------------------------------
