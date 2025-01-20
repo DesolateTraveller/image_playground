@@ -34,7 +34,7 @@ st.set_page_config(page_title="Image Playground | v0.2",
                     page_icon="🖼️",            
                     initial_sidebar_state="collapsed")
 #----------------------------------------
-st.title(f""":rainbow[Image Playground]""")
+#st.title(f""":rainbow[Image Playground]""")
 st.markdown(
     """
     <style>
