@@ -29,33 +29,41 @@ from streamlit_image_comparison import image_comparison
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Title and description for your Streamlit app
 #---------------------------------------------------------------------------------------------------------------------------------
-st.set_page_config(page_title="Image Playground | v0.1",
+st.set_page_config(page_title="Image Playground | v0.2",
                     layout="wide",
                     page_icon="🖼️",            
                     initial_sidebar_state="collapsed")
 #----------------------------------------
 st.title(f""":rainbow[Image Playground]""")
-#st.markdown(
-    #'''
-    #Created by | <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a> ( 📑 [Resume](https://resume-avijitc.streamlit.app/) | :bust_in_silhouette: [LinkedIn](https://www.linkedin.com/in/avijit2403/) | :computer: [GitHub](https://github.com/DesolateTraveller) ) |
-    #for best view of the app, please **zoom-out** the browser to **75%**.
-    #''',
-    #unsafe_allow_html=True)
-#st.info('**A lightweight image-processing streamlit app that supports the following operations: upload image, crop, remove background, mirror, convert, rotate, change brightness**', icon="ℹ️")
-#st.divider()
-#----------------------------------------
 st.markdown(
     """
+    <style>
+    .title {
+        text-align: center;
+        font-size: 40px;
+        font-weight: bold;
+        background: linear-gradient(to left, red, orange, blue, indigo, violet);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    </style>
+    <div class="title">Image Playground</div>
+    """,
+    unsafe_allow_html=True
+)
+#----------------------------------------
+
+st.markdown("""
     <style>
     .footer {
         position: fixed;
         left: 0;
         bottom: 0;
         width: 100%;
-        background-color: #f1f1f1;
+        background-color: #F9F9FB;
         text-align: center;
-        padding: 10px;
-        font-size: 14px;
+        padding: 5px;
+        font-size: 15px;
         color: #333;
         z-index: 100;
     }
@@ -69,10 +77,11 @@ st.markdown(
     </style>
 
     <div class="footer">
-        <p>© 2025 | Developed by: <span class="highlight">Avijit Chakraborty</span> | Contact : <a href="mailtoavijit.mba18@gmail.com">Avijit Chakraborty</a></p> <span class="highlight">Thank you for visiting the app | This app is created for internal use, unauthorized uses or copying is strictly prohibited</span>
+        <p>© 2025 | Developed by: <span class="highlight">E&PT - Digital Solutions</span> | Prepared by: <a href="mailto:avijit.chakraborty@clariant.com">Avijit Chakraborty</a> & <a href="mailto:rakesh.lipare@clariant.com">Rakesh Lipare</a></p> 
+        <span class="highlight">Thank you for visiting the app | This app is created for internal use, unauthorized uses or copying is strictly prohibited | For best view of the app, please zoom out the browser to 75%.</span>
     </div>
-    """,
-    unsafe_allow_html=True)
+    
+""", unsafe_allow_html=True)
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Functions & Definitions
 #---------------------------------------------------------------------------------------------------------------------------------
