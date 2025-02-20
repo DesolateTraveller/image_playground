@@ -38,32 +38,40 @@ st.set_page_config(page_title="Image Playground | v0.2",
 st.markdown(
     """
     <style>
-    .title {
+    .title-large {
         text-align: center;
-        font-size: 40px;
+        font-size: 35px;
         font-weight: bold;
         background: linear-gradient(to left, red, orange, blue, indigo, violet);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+    .title-small {
+        text-align: center;
+        font-size: 20px;
+        background: linear-gradient(to left, red, orange, blue, indigo, violet);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
     </style>
-    <div class="title">Image Playground</div>
+    <div class="title-large">Image Playground</div>
+    <div class="title-small">Play with Image</div>
     """,
     unsafe_allow_html=True
 )
 #----------------------------------------
-
-st.markdown("""
+st.markdown(
+    """
     <style>
     .footer {
         position: fixed;
         left: 0;
         bottom: 0;
         width: 100%;
-        background-color: #F9F9FB;
+        background-color: #F0F2F6;
         text-align: center;
-        padding: 5px;
-        font-size: 15px;
+        padding: 10px;
+        font-size: 14px;
         color: #333;
         z-index: 100;
     }
@@ -77,11 +85,10 @@ st.markdown("""
     </style>
 
     <div class="footer">
-        <p>© 2025 | Developed by: <span class="highlight">E&PT - Digital Solutions</span> | Prepared by: <a href="mailto:avijit.chakraborty@clariant.com">Avijit Chakraborty</a> & <a href="mailto:rakesh.lipare@clariant.com">Rakesh Lipare</a></p> 
-        <span class="highlight">Thank you for visiting the app | This app is created for internal use, unauthorized uses or copying is strictly prohibited | For best view of the app, please zoom out the browser to 75%.</span>
+        <p>© 2025 | Created by : <span class="highlight">Avijit Chakraborty</span> | Prepared by: <a href="mailto:avijit.mba18@gmail.com">Avijit Chakraborty</a></p> <span class="highlight">Thank you for visiting the app | Unauthorized uses or copying is strictly prohibited | For best view of the app, please zoom out the browser to 75%.</span>
     </div>
-    
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True)
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Functions & Definitions
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -89,60 +96,20 @@ st.markdown("""
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Main app
 #---------------------------------------------------------------------------------------------------------------------------------
-stats_expander = st.expander("**:blue[App Capabilities]**", expanded=False)
-with stats_expander:
+with st.popover("**:red[App Capabilities]**", disabled=False, use_container_width=True): 
 
-        st.markdown("""
-            <style>
-            .info-container {
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-left: 6px solid #3498db;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            }
-            .info-container h3 {
-            color: #3498db;
-            font-weight: bold;
-            margin-bottom: 10px;
-            }
-            .info-container p {
-            color: #333;
-            margin: 5px 0;
-            }
-            .info-container ul {
-            list-style-type: none;
-            padding: 0;
-            }
-            .info-container li {
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            }
-            .info-container li:before {
-            content: "⭐";
-            margin-right: 10px;
-            color: #3498db;
-            font-size: 1.2em;
-            }
-            </style>
+    st.info("""
 
-            <div class="info-container">
-            <h3>🛠️ App Capabilities</h3>
-            <p>This app is designed to perform a variety of tasks including:</p>
-            <ul>
-            <li><strong>View</strong> -         It allows you to preview the uploaded image file directly within the application.</li>
-            <li><strong>Crop</strong> -         It is designed to crop the uploaded image file.</li>
-            <li><strong>Remove</strong> -       It helps to remove the background of the uploadedimage file.</li>
-            <li><strong>Mirror</strong> -       It helps create mirror of the uploaded image file.</li>
-            <li><strong>Convert</strong> -      It helps to convert in greyscale or black-white of the uploaded image file.</li>
-            <li><strong>Rotate</strong> -       It helps to rotate of the uploaded image file.</li>
-            <li><strong>Change</strong> -       It helps to change the brightness, saturation, contrast & sharpness of the uploaded image file.</li>
-            <li><strong>Generate</strong> -     It tab allows to generate a random image from the uploaded image file. </li>                       
-            </ul>
-            </div>
-            """, unsafe_allow_html=True)
+           - **View** -         It allows you to preview the uploaded image file directly within the application.
+           - **Crop** -         It is designed to crop the uploaded image file.
+           - **Remove** -       It helps to remove the background of the uploadedimage file.
+           - **Mirror** -       It helps create mirror of the uploaded image file.
+           - **Convert** -      It helps to convert in greyscale or black-white of the uploaded image file.
+           - **Rotate** -       It helps to rotate of the uploaded image file.
+           - **Change** -       It helps to change the brightness, saturation, contrast & sharpness of the uploaded image file.
+           - **Generate** -     It tab allows to generate a random image from the uploaded image file.                     
+
+            """)
         
 #---------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------
