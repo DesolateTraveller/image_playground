@@ -92,7 +92,25 @@ st.markdown(
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Functions & Definitions
 #---------------------------------------------------------------------------------------------------------------------------------
-
+st.markdown(
+            """
+            <style>
+                .centered-info {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+                font-size: 15px;
+                color: #007BFF; 
+                padding: 5px;
+                background-color: #FFFFFF; 
+                border-radius: 5px;
+                border: 1px solid #007BFF;
+                margin-top: 0px;
+                margin-bottom: 10px;
+                }
+            </style>
+            """,unsafe_allow_html=True,)
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Main app
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -114,34 +132,34 @@ with st.popover("**:red[App Capabilities]**", disabled=False, use_container_widt
 #---------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------
 
-option = st.radio(
-label="Upload an image, take one with your camera, or load image from a URL",
-options=(
-        "⬆️ Upload an image",
-        "📷 Take a photo with my camera",
-        "🌐 Load image from a URL",
-    ),
-horizontal=True, label_visibility='collapsed',
-help="Uploaded images are deleted from the server when you\n* upload another image, or\n* clear the file uploader, or\n* close the browser tab",)
+st.sidebar.markdown('<div class="centered-info"><span style="margin-left: 10px;">Input</span></div>',unsafe_allow_html=True,)
 
-if option == "⬆️ Upload an image":
-        upload_img = st.file_uploader(label="**Upload an image**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
-        mode = "upload"
+with st.sidebar.container(border=True):
+    
+        option = st.radio(label="Upload an image, take one with your camera, or load image from a URL",
+                      options=("⬆️ **:blue[Upload an image]**","📷 **:blue[Take a photo]**","🌐 **:blue[Load image from a URL]**",),
+                      label_visibility='collapsed',help="Uploaded images are deleted from the server when you\n* upload another image, or\n* clear the file uploader, or\n* close the browser tab",)
 
-elif option == "📷 Take a photo with my camera":
-        upload_img = st.camera_input(label="**Take a picture**",)
-        mode = "camera"
+with st.sidebar.container(border=True): 
+                           
+        if option == "⬆️ **:blue[Upload an image]**":
+                    upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                    mode = "upload"
 
-elif option == "🌐 Load image from a URL":
-        url = st.text_input("**Image URL**",key="url",)
-        mode = "url"
+        elif option == "📷 **:blue[Take a photo]**":
+                    enable = st.checkbox("Enable camera")
+                    upload_img = st.camera_input(label="**:blue[Take a picture]**",disabled=not enable)
+                    mode = "camera"
 
-        if url != "":
-            try:
-                response = requests.get(url)
-                upload_img = Image.open(BytesIO(response.content))
-            except:
-                st.error("The URL does not seem to be valid.")
+        elif option == "🌐 **:blue[Load image from a URL]**":
+                    url = st.text_input("**:blue[Image URL]**",key="url",)
+                    mode = "url"
+                    if url != "":
+                        try:
+                            response = requests.get(url)
+                            upload_img = Image.open(BytesIO(response.content))
+                        except:
+                            st.error("The URL does not seem to be valid.")
                 
 with contextlib.suppress(NameError):
     if upload_img is not None:
