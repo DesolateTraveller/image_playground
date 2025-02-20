@@ -32,7 +32,7 @@ from streamlit_image_comparison import image_comparison
 st.set_page_config(page_title="Image Playground | v0.2",
                     layout="wide",
                     page_icon="🖼️",            
-                    initial_sidebar_state="collapsed")
+                    initial_sidebar_state="auto")
 #----------------------------------------
 #st.title(f""":rainbow[Image Playground]""")
 st.markdown(
