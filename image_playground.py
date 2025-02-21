@@ -22,7 +22,7 @@ from PIL import Image, ImageEnhance, ImageOps
 #----------------------------------------
 from io import BytesIO
 #----------------------------------------
-#from rembg import remove
+from rembg import remove
 from st_social_media_links import SocialMediaIcons
 from streamlit_cropper import st_cropper
 from streamlit_image_comparison import image_comparison
@@ -55,7 +55,7 @@ st.markdown(
     }
     </style>
     <div class="title-large">Image Playground</div>
-    <div class="title-small">Play with Image</div>
+    <div class="title-small">Play with Image | v0.2</div>
     """,
     unsafe_allow_html=True
 )
@@ -132,293 +132,667 @@ with st.popover("**:red[App Capabilities]**", disabled=False, use_container_widt
 #---------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------
 
-st.sidebar.markdown('<div class="centered-info"><span style="margin-left: 10px;">Input</span></div>',unsafe_allow_html=True,)
-
-with st.sidebar.container(border=True):
-    
-        option = st.radio(label="Upload an image, take one with your camera, or load image from a URL",
-                      options=("⬆️ **:blue[Upload an image]**","📷 **:blue[Take a photo]**","🌐 **:blue[Load image from a URL]**",),
-                      label_visibility='collapsed',help="Uploaded images are deleted from the server when you\n* upload another image, or\n* clear the file uploader, or\n* close the browser tab",)
-
-with st.sidebar.container(border=True): 
-                           
-        if option == "⬆️ **:blue[Upload an image]**":
-                    upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
-                    mode = "upload"
-
-        elif option == "📷 **:blue[Take a photo]**":
-                    enable = st.checkbox("Enable camera")
-                    upload_img = st.camera_input(label="**:blue[Take a picture]**",disabled=not enable)
-                    mode = "camera"
-
-        elif option == "🌐 **:blue[Load image from a URL]**":
-                    url = st.text_input("**:blue[Image URL]**",key="url",)
-                    mode = "url"
-                    if url != "":
-                        try:
-                            response = requests.get(url)
-                            upload_img = Image.open(BytesIO(response.content))
-                        except:
-                            st.error("The URL does not seem to be valid.")
-                
-with contextlib.suppress(NameError):
-    if upload_img is not None:
-        pil_img = (upload_img.convert("RGB") if mode == "url" else Image.open(upload_img).convert("RGB"))
-        img_arr = np.asarray(pil_img)
-
-        if mode == "upload":
-            file_details = {
-                "File Name": upload_img.name,
-                "File Size (KB)": round(upload_img.size / 1024, 2),
-                "Format": pil_img.format,
-                "Mode": pil_img.mode,
-                "Width (px)": pil_img.size[0],
-                "Height (px)": pil_img.size[1],}
-        else:
-            file_details = {
-                "File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
-                "File Size (KB)": "N/A",
-                "Format": pil_img.format,
-                "Mode": pil_img.mode,
-                "Width (px)": pil_img.size[0],
-                "Height (px)": pil_img.size[1],
-                }
+#st.sidebar.markdown('<div class="centered-info"><span style="margin-left: 10px;">Input</span></div>',unsafe_allow_html=True,)
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Content
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(["**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**",])
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "view"
+
+col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
+with col1:
+    if st.button("**:red[View]**",use_container_width=True):
+        st.session_state.current_page = "view"
+with col2:
+    if st.button("**:red[Crop]**",use_container_width=True):
+        st.session_state.current_page = "crop"
+with col3:
+    if st.button("**:red[Remove]**",use_container_width=True):
+        st.session_state.current_page = "remove"
+with col4:
+    if st.button("**:red[Mirror]**",use_container_width=True):
+        st.session_state.current_page = "mirror"
+with col5:
+    if st.button("**:red[Convert]**",use_container_width=True):
+        st.session_state.current_page = "convert"
+with col6:
+    if st.button("**:red[Rotate]**",use_container_width=True):
+        st.session_state.current_page = "rotate"
+with col7:
+    if st.button("**:red[Change]**",use_container_width=True):
+        st.session_state.current_page = "change"
+with col8:
+    if st.button("**:red[Generate]**",use_container_width=True):
+        st.session_state.current_page = "generate"       
+        
+page = st.session_state.current_page 
+st.divider()
+#tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(["**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**",])
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### View
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab1:
+#with tab1:
+if page == "view":
 
-            st.write("""
-            The **View** tab allows you to preview image files directly within the application. 
-            You can upload or take photo using camera of load from a URL of an image and view its content without any external software.
-            """)
-            col1, col2 = st.columns((0.8,0.2))
-            with col1:
+    st.info("""The **View** tab allows you to preview image files directly within the application. You can upload an image, take a photo using your camera, or load an image from a URL and view its content without any external software.""")
+
+    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    with col1:
+        with st.container(border=True):
+            
+            option = st.radio(
+                label="Upload an image, take one with your camera, or load an image from a URL",
+                options=(
+                    "⬆️ **:blue[Upload an image]**",
+                    "📷 **:blue[Take a photo]**",
+                    "🌐 **:blue[Load image from a URL]**",),
+                label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
+
+            st.divider()
+            upload_img = None  # Ensure upload_img is always defined
+            pil_img = None
+            mode = None
+
+            if option == "⬆️ **:blue[Upload an image]**":
+                upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                mode = "upload"
+
+            elif option == "📷 **:blue[Take a photo]**":
+                enable = st.checkbox("Enable camera")
+                upload_img = st.camera_input(label="**:blue[Take a picture]**", disabled=not enable)
+                mode = "camera"
+
+            elif option == "🌐 **:blue[Load image from a URL]**":
+                url = st.text_input("**:blue[Image URL]**", key="url")
+                mode = "url"
+                if url:
+                    try:
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                        else:
+                            st.error("Failed to load image from URL.")
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
+
+            if upload_img is not None:
+
+                if mode == "upload" or mode == "camera":
+                    pil_img = Image.open(upload_img).convert("RGB")
+                elif mode == "url":
+                    pil_img = upload_img.convert("RGB")  # Since upload_img is already an Image object
+                img_arr = np.asarray(pil_img)  # Convert PIL Image to NumPy array for display
+
+                if mode == "upload":
+                    file_details = {"File Name": upload_img.name,"File Size (KB)": round(upload_img.size / 1024, 2),
+                    "Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                else:
+                    file_details = {"File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                    "File Size (KB)": "N/A","Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+
+                st.success("Image loaded successfully!")
                 
-                st.subheader("Image", divider='blue')
-                st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
-
                 with col2:
-                     
-                    st.subheader("Information", divider='blue')
-                    for key, value in file_details.items():
-                        st.write(f"**{key}:** {value}")
-                    #st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+                    with st.container(border=True):
+                
+                        st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
+        
+                with col3:
+                    with st.container(border=True):
+                
+                        for key, value in file_details.items():
+                            st.write(f"**{key}:** {value}")
+                    
+            else:
+                st.warning("Please upload/click/fetch a image file to view.")
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Crop
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab2:
+#with tab2:
+if page == "crop":
 
-            st.write("""
-            The **Crop** tab is designed to crop the uploaded image files. 
-            You can upload or take photo using camera of load from a URL of an image and the tool will help to crop the image file.
-            """) 
-            col1, col2, col3 = st.columns((0.1,0.6,0.3))
-            with col1:
+    st.info("""The **Crop** tab is designed to crop the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to crop the image file.""") 
+    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    with col1:
+        with st.container(border=True):
+            
+            option = st.radio(
+                label="Upload an image, take one with your camera, or load an image from a URL",
+                options=(
+                    "⬆️ **:blue[Upload an image]**",
+                    "📷 **:blue[Take a photo]**",
+                    "🌐 **:blue[Load image from a URL]**",),
+                label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
 
-                st.subheader("Parameters", divider='blue')                 
+            st.divider()
+            upload_img = None  # Ensure upload_img is always defined
+            pil_img = None
+            mode = None
+
+            if option == "⬆️ **:blue[Upload an image]**":
+                upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                mode = "upload"
+
+            elif option == "📷 **:blue[Take a photo]**":
+                enable = st.checkbox("Enable camera")
+                upload_img = st.camera_input(label="**:blue[Take a picture]**", disabled=not enable)
+                mode = "camera"
+
+            elif option == "🌐 **:blue[Load image from a URL]**":
+                url = st.text_input("**:blue[Image URL]**", key="url")
+                mode = "url"
+                if url:
+                    try:
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                        else:
+                            st.error("Failed to load image from URL.")
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
+
+            if upload_img is not None:
+
+                if mode == "upload" or mode == "camera":
+                    pil_img = Image.open(upload_img).convert("RGB")
+                elif mode == "url":
+                    pil_img = upload_img.convert("RGB")  # Since upload_img is already an Image object
+                img_arr = np.asarray(pil_img)  # Convert PIL Image to NumPy array for display
+
+                if mode == "upload":
+                    file_details = {"File Name": upload_img.name,"File Size (KB)": round(upload_img.size / 1024, 2),
+                    "Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                else:
+                    file_details = {"File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                    "File Size (KB)": "N/A","Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                    
+                st.success("Image loaded successfully!")
+                
+                #st.subheader("Parameters", divider='blue')   
+                st.divider()             
                 realtime_update = st.checkbox(label="**update in Real Time**", value=True)
                 box_color = st.color_picker(label="**Box Color**", value='#0000FF')
-                aspect_choice = st.radio(label="**Aspect Ratio**", options=["1:1", "16:9", "4:3", "2:3", "Free"])
+                aspect_choice = st.radio(label="**Aspect Ratio**", options=["1:1", "16:9", "4:3", "2:3", "Free"],horizontal=True)
                 aspect_dict = {"1:1": (1, 1),"16:9": (16, 9),"4:3": (4, 3),"2:3": (2, 3),"Free": None}
                 aspect_ratio = aspect_dict[aspect_choice]
+                    
+                with col2:
+                    with st.container(border=True):
 
-            with col2:
-
-                st.subheader("Image", divider='blue')
-                img = Image.fromarray(img_arr)
-                if not realtime_update:
-                    st.write("**Double click to save crop**")
-                cropped_img = st_cropper(img, realtime_update=realtime_update, box_color=box_color,aspect_ratio=aspect_ratio)
-                #st.image(img_arr, use_column_width="auto", caption="Original Image")
-                #cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
+                        #st.subheader("Image", divider='blue')
+                        img = Image.fromarray(img_arr)
+                        if not realtime_update:
+                            st.write("**Double click to save crop**")
+                        cropped_img = st_cropper(img, realtime_update=realtime_update, box_color=box_color,aspect_ratio=aspect_ratio)
+                        #st.image(img_arr, use_column_width="auto", caption="Original Image")
+                        #cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
 
                 with col3:
-
-                    #if st.button("**Crop Image**"):
-                        st.subheader("Output", divider='blue')                      
+                    with st.container(border=True):
+                        
+                        #if st.button("**Crop Image**"):
+                        #st.subheader("Output", divider='blue')                      
                         st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
                         buffered = BytesIO()
                         cropped_img.save(buffered, format="PNG")
-                        st.download_button(label="**Download Cropped Image**",data=buffered,file_name="cropped_image.png",mime="image/png",)
+                    st.download_button(label="**📥 Download Cropped Image**",data=buffered,file_name="cropped_image.png",mime="image/png",)
 
-                        if "cropped_img" not in locals():
-                            st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+                    if "cropped_img" not in locals():
+                        st.write(f"Original width = {pil_img.size[0]}px and height = {pil_img.size[1]}px")
+                        
+            else:
+                st.warning("Please upload/click/fetch a image file to crop.")
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Remove
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab3:
+#with tab3:
+if page == "remove":
+    
+    st.info("""The **Remove** tab is designed to remove the background of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to remove the background of the image file.""") 
+    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    with col1:
+        with st.container(border=True):
+            
+            option = st.radio(
+                label="Upload an image, take one with your camera, or load an image from a URL",
+                options=(
+                    "⬆️ **:blue[Upload an image]**",
+                    "📷 **:blue[Take a photo]**",
+                    "🌐 **:blue[Load image from a URL]**",),
+                label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
 
-            st.write("""
-            The **Remove** tab is designed to remove the background of the uploaded image files. 
-            You can upload or take photo using camera of load from a URL of an image and the tool will help to remove the background of the image file.
-            """) 
-            col1, col2 = st.columns((0.6, 0.4))
-            with col1:
+            st.divider()
+            upload_img = None  # Ensure upload_img is always defined
+            pil_img = None
+            mode = None
 
-                st.subheader("Image", divider='blue')             
-                st.image(img_arr, use_column_width="auto", caption="Original Image")
+            if option == "⬆️ **:blue[Upload an image]**":
+                upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                mode = "upload"
 
-                with col2:
+            elif option == "📷 **:blue[Take a photo]**":
+                enable = st.checkbox("Enable camera")
+                upload_img = st.camera_input(label="**:blue[Take a picture]**", disabled=not enable)
+                mode = "camera"
+
+            elif option == "🌐 **:blue[Load image from a URL]**":
+                url = st.text_input("**:blue[Image URL]**", key="url")
+                mode = "url"
+                if url:
+                    try:
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                        else:
+                            st.error("Failed to load image from URL.")
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
+
+            if upload_img is not None:
+
+                if mode == "upload" or mode == "camera":
+                    pil_img = Image.open(upload_img).convert("RGB")
+                elif mode == "url":
+                    pil_img = upload_img.convert("RGB")  # Since upload_img is already an Image object
+                img_arr = np.asarray(pil_img)  # Convert PIL Image to NumPy array for display
+
+                if mode == "upload":
+                    file_details = {"File Name": upload_img.name,"File Size (KB)": round(upload_img.size / 1024, 2),
+                    "Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                else:
+                    file_details = {"File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                    "File Size (KB)": "N/A","Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+
+                st.success("Image loaded successfully!")
+                if st.button("**Remove Background**"):
+                    with col2:
+                        with st.container(border=True):
+            
+                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                    with col3:
+                        with st.container(border=True):                        
+
+                            bg_removed_img = remove(pil_img)
+                            st.image(bg_removed_img, use_column_width="auto", caption="Background Removed")
+
+                            buffered = BytesIO()
+                            bg_removed_img.save(buffered, format="PNG")
+                        st.download_button(label="**📥 Download Image with Background Removed**",data=buffered,file_name="bg_removed_image.png",mime="image/png",)
                         
-                    st.subheader("Output", divider='blue')  
-                    if st.button("**Remove Background**"):
-                        bg_removed_img = remove(pil_img)
-                        st.image(bg_removed_img, use_column_width="auto", caption="Background Removed")
-
-                        buffered = BytesIO()
-                        bg_removed_img.save(buffered, format="PNG")
-                        st.download_button(label="**Download Image with Background Removed**",data=buffered,file_name="bg_removed_image.png",mime="image/png",)
+            else:
+                st.warning("Please upload/click/fetch a image file to remove.")
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Mirror
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab4:
+#with tab4:
+if page == "mirror":
 
-            st.write("""
-            The **Mirror** tab is designed to mirror the uploaded image files. 
-            You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.
-            """)                          
-            col1, col2 = st.columns((0.6, 0.4))
-            with col1:
+    st.info("""The **Mirror** tab is designed to mirror the uploaded image files.You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.""")                          
+    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    with col1:
+        with st.container(border=True):
+            
+            option = st.radio(
+                label="Upload an image, take one with your camera, or load an image from a URL",
+                options=(
+                    "⬆️ **:blue[Upload an image]**",
+                    "📷 **:blue[Take a photo]**",
+                    "🌐 **:blue[Load image from a URL]**",),
+                label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
 
-                st.subheader("Image", divider='blue')             
-                st.image(img_arr, use_column_width="auto", caption="Original Image")
+            st.divider()
+            upload_img = None  # Ensure upload_img is always defined
+            pil_img = None
+            mode = None
 
-                with col2:
+            if option == "⬆️ **:blue[Upload an image]**":
+                upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                mode = "upload"
 
-                    st.subheader("Output", divider='blue')                       
-                    if st.button("**Mirror Image**"):
-                        mirrored_img = ImageOps.mirror(pil_img)
-                        st.image(mirrored_img, use_column_width="auto", caption="Mirrored Image")
+            elif option == "📷 **:blue[Take a photo]**":
+                enable = st.checkbox("Enable camera")
+                upload_img = st.camera_input(label="**:blue[Take a picture]**", disabled=not enable)
+                mode = "camera"
 
-                        buffered = BytesIO()
-                        mirrored_img.save(buffered, format="PNG")
-                        st.download_button(label="**Download Mirrored Image**",data=buffered,file_name="mirrored_image.png",mime="image/png",)
+            elif option == "🌐 **:blue[Load image from a URL]**":
+                url = st.text_input("**:blue[Image URL]**", key="url")
+                mode = "url"
+                if url:
+                    try:
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                        else:
+                            st.error("Failed to load image from URL.")
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
 
+            if upload_img is not None:
+
+                if mode == "upload" or mode == "camera":
+                    pil_img = Image.open(upload_img).convert("RGB")
+                elif mode == "url":
+                    pil_img = upload_img.convert("RGB")  # Since upload_img is already an Image object
+                img_arr = np.asarray(pil_img)  # Convert PIL Image to NumPy array for display
+
+                if mode == "upload":
+                    file_details = {"File Name": upload_img.name,"File Size (KB)": round(upload_img.size / 1024, 2),
+                    "Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                else:
+                    file_details = {"File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                    "File Size (KB)": "N/A","Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+
+                st.success("Image loaded successfully!")
+                if st.button("**Mirror Image**"):
+                    with col2:
+                        with st.container(border=True):
+            
+                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                    with col3:
+                        with st.container(border=True):
+                 
+                            mirrored_img = ImageOps.mirror(pil_img)
+                            st.image(mirrored_img, use_column_width="auto", caption="Mirrored Image")
+                            buffered = BytesIO()
+                            mirrored_img.save(buffered, format="PNG")
+                            
+                        st.download_button(label="**📥 Download Mirrored Image**",data=buffered,file_name="mirrored_image.png",mime="image/png",)
+
+            else:
+                st.warning("Please upload/click/fetch a image file to mirror.")
+                
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Convert
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab5:
+#with tab5:
+if page == "convert":
 
-            st.write("""
-            The **Convert** tab is designed to convert of the uploaded image files. 
-            You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.
-            """)                                   
-            col1, col2 = st.columns((0.6, 0.4))
-            with col1:            
+    st.info("""The **Convert** tab is designed to convert of the uploaded image files.You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.""")                                   
+    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    with col1:
+        with st.container(border=True):
+            
+            option = st.radio(
+                label="Upload an image, take one with your camera, or load an image from a URL",
+                options=(
+                    "⬆️ **:blue[Upload an image]**",
+                    "📷 **:blue[Take a photo]**",
+                    "🌐 **:blue[Load image from a URL]**",),
+                label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
 
-                st.subheader("Image", divider='blue')             
-                st.image(img_arr, use_column_width="auto", caption="Original Image")
+            st.divider()
+            upload_img = None  # Ensure upload_img is always defined
+            pil_img = None
+            mode = None
 
-                with col2:
+            if option == "⬆️ **:blue[Upload an image]**":
+                upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                mode = "upload"
 
-                    st.subheader("Output", divider='blue')                       
-                    conv_option = st.radio('Options', ['BW','Greyscale'], horizontal=True, label_visibility='collapsed', key='conv_option')
+            elif option == "📷 **:blue[Take a photo]**":
+                enable = st.checkbox("Enable camera")
+                upload_img = st.camera_input(label="**:blue[Take a picture]**", disabled=not enable)
+                mode = "camera"
 
-                    if conv_option == "BW":
-                        bw_img = pil_img.convert("1")  
-                        st.image(bw_img, use_column_width="auto", caption="Black & White Image")
-                        buffered = BytesIO()
-                        bw_img.save(buffered, format="PNG")
-                        st.download_button(label="**Download Black & White Image**",data=buffered,file_name="black_white_image.png",mime="image/png",)
+            elif option == "🌐 **:blue[Load image from a URL]**":
+                url = st.text_input("**:blue[Image URL]**", key="url")
+                mode = "url"
+                if url:
+                    try:
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                        else:
+                            st.error("Failed to load image from URL.")
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
 
-                    if conv_option == "Greyscale":
-                        grey_img = pil_img.convert("L") 
-                        st.image(grey_img, use_column_width="auto", caption="Greyscale Image")
-                        buffered = BytesIO()
-                        grey_img.save(buffered, format="PNG")
-                        st.download_button(label="**Download Greyscale Image**",data=buffered,file_name="greyscale_image.png",mime="image/png",)
+            if upload_img is not None:
+
+                if mode == "upload" or mode == "camera":
+                    pil_img = Image.open(upload_img).convert("RGB")
+                elif mode == "url":
+                    pil_img = upload_img.convert("RGB")  # Since upload_img is already an Image object
+                img_arr = np.asarray(pil_img)  # Convert PIL Image to NumPy array for display
+
+                if mode == "upload":
+                    file_details = {"File Name": upload_img.name,"File Size (KB)": round(upload_img.size / 1024, 2),
+                    "Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                else:
+                    file_details = {"File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                    "File Size (KB)": "N/A","Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+
+                st.success("Image loaded successfully!")
+                st.divider()
+                conv_option = st.radio('Options', ['BW','Greyscale'], horizontal=True, label_visibility='collapsed', key='conv_option')
+                
+                if st.button("**Convert Image**"):
+                    with col2:
+                        with st.container(border=True):           
+           
+                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                    with col3:
+                        with st.container(border=True):                           
+                    
+                            if conv_option == "BW":
+                                bw_img = pil_img.convert("1")  
+                                st.image(bw_img, use_column_width="auto", caption="Black & White Image")
+                                buffered = BytesIO()
+                                bw_img.save(buffered, format="PNG")
+                        
+                            if conv_option == "Greyscale":
+                                grey_img = pil_img.convert("L") 
+                                st.image(grey_img, use_column_width="auto", caption="Greyscale Image")
+                                buffered = BytesIO()
+                                grey_img.save(buffered, format="PNG")
+
+                        if conv_option == "BW":
+                            st.download_button(label="**📥 Download Black & White Image**",data=buffered,file_name="black_white_image.png",mime="image/png",)
+                                                            
+                        if conv_option == "Greyscale":                                    
+                            st.download_button(label="**📥 Download Greyscale Image**",data=buffered,file_name="greyscale_image.png",mime="image/png",)                       
+ 
+            else:
+                st.warning("Please upload/click/fetch a image file to convert.")
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Rotate
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab6:
+#with tab6:
+if page == "rotate":
 
-            st.write("""
-            The **Rotate** tab is designed to rotate of the uploaded image files. 
-            You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.
-            """)                     
-            col1, col2 = st.columns((0.6, 0.4))
-            with col1:            
+    st.info("""The **Rotate** tab is designed to rotate of the uploaded image files.You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.""")                     
+    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    with col1:
+        with st.container(border=True):
+            
+            option = st.radio(
+                label="Upload an image, take one with your camera, or load an image from a URL",
+                options=(
+                    "⬆️ **:blue[Upload an image]**",
+                    "📷 **:blue[Take a photo]**",
+                    "🌐 **:blue[Load image from a URL]**",),
+                label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
 
-                st.subheader("Image", divider='blue')             
-                st.image(img_arr, use_column_width="auto", caption="Original Image")
+            st.divider()
+            upload_img = None  # Ensure upload_img is always defined
+            pil_img = None
+            mode = None
 
-                with col2:
+            if option == "⬆️ **:blue[Upload an image]**":
+                upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                mode = "upload"
 
-                    st.subheader("Output", divider='blue')                       
-                    angle = st.slider("Rotate Image", min_value=0, max_value=360, value=0)
-                    if st.button("**Rotate Image**"):
-                         
-                        rotated_img = pil_img.rotate(angle)
-                        st.image(rotated_img, use_column_width="auto", caption=f"Rotated Image by {angle} degrees")
-        
-                        buffered = BytesIO()
-                        rotated_img.save(buffered, format="PNG")
-                        st.download_button(label="**Download Rotated Image**",data=buffered,file_name="rotated_image.png",mime="image/png",)
+            elif option == "📷 **:blue[Take a photo]**":
+                enable = st.checkbox("Enable camera")
+                upload_img = st.camera_input(label="**:blue[Take a picture]**", disabled=not enable)
+                mode = "camera"
 
+            elif option == "🌐 **:blue[Load image from a URL]**":
+                url = st.text_input("**:blue[Image URL]**", key="url")
+                mode = "url"
+                if url:
+                    try:
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                        else:
+                            st.error("Failed to load image from URL.")
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
+
+            if upload_img is not None:
+
+                if mode == "upload" or mode == "camera":
+                    pil_img = Image.open(upload_img).convert("RGB")
+                elif mode == "url":
+                    pil_img = upload_img.convert("RGB")  # Since upload_img is already an Image object
+                img_arr = np.asarray(pil_img)  # Convert PIL Image to NumPy array for display
+
+                if mode == "upload":
+                    file_details = {"File Name": upload_img.name,"File Size (KB)": round(upload_img.size / 1024, 2),
+                    "Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                else:
+                    file_details = {"File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                    "File Size (KB)": "N/A","Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+
+                st.success("Image loaded successfully!")
+                st.divider()
+                angle = st.slider("**Rotate**", min_value=0, max_value=360, value=0)
+                
+                if st.button("**Rotate Image**"):
+                    with col2:
+                        with st.container(border=True):           
+           
+                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                    with col3:
+                        with st.container(border=True):   
+                                                    
+                            rotated_img = pil_img.rotate(angle)
+                            st.image(rotated_img, use_column_width="auto", caption=f"Rotated Image by {angle} degrees")
+                            buffered = BytesIO()
+                            rotated_img.save(buffered, format="PNG")
+                        st.download_button(label="**📥 Download Rotated Image**",data=buffered,file_name="rotated_image.png",mime="image/png",)
+
+            else:
+                st.warning("Please upload/click/fetch a image file to rotate.")
+                
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Change
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab7:
+#with tab7:
+if page == "change":
 
-            st.write("""
-            The **Change** tab is designed to change the properties of the uploaded image files. 
-            You can upload or take photo using camera of load from a URL of an image and the tool will help to change the properties (e.g, brightness,saturation, sharpness, contrast) of the image file.
-            """)                 
-            col1, col2 = st.columns((0.6, 0.4))
-            with col1:            
+    st.info("""The **Change** tab is designed to change the properties of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to change the properties (e.g, brightness,saturation, sharpness, contrast) of the image file.""")                 
+    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    with col1:
+        with st.container(border=True):
+            
+            option = st.radio(
+                label="Upload an image, take one with your camera, or load an image from a URL",
+                options=(
+                    "⬆️ **:blue[Upload an image]**",
+                    "📷 **:blue[Take a photo]**",
+                    "🌐 **:blue[Load image from a URL]**",),
+                label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
 
-                st.subheader("Image", divider='blue')             
-                st.image(img_arr, use_column_width="auto", caption="Original Image")
+            st.divider()
+            upload_img = None  # Ensure upload_img is always defined
+            pil_img = None
+            mode = None
 
-                with col2:
+            if option == "⬆️ **:blue[Upload an image]**":
+                upload_img = st.file_uploader(label="**:blue[Upload an image]**",type=["bmp", "jpg", "jpeg", "png", "svg"],)
+                mode = "upload"
 
-                    st.subheader("Output", divider='blue')  
-                    stats_expander = st.expander("**:blue[Tuner]**", expanded=False)
-                    with stats_expander:
-                        brightness = st.slider("Brightness", 0.0, 2.0, 1.0)
-                        saturation = st.slider("Saturation", 0.0, 2.0, 1.0)
-                        sharpness = st.slider("Sharpness", 0.0, 2.0, 1.0)
-                        contrast = st.slider("Contrast", 0.0, 2.0, 1.0)
+            elif option == "📷 **:blue[Take a photo]**":
+                enable = st.checkbox("Enable camera")
+                upload_img = st.camera_input(label="**:blue[Take a picture]**", disabled=not enable)
+                mode = "camera"
 
-                    enhanced_img = ImageEnhance.Brightness(pil_img).enhance(brightness)
-                    enhanced_img = ImageEnhance.Color(enhanced_img).enhance(saturation)
-                    enhanced_img = ImageEnhance.Sharpness(enhanced_img).enhance(sharpness)
-                    enhanced_img = ImageEnhance.Contrast(enhanced_img).enhance(contrast)
-                    st.image(enhanced_img, use_column_width="auto", caption="Contrast Adjusted")
+            elif option == "🌐 **:blue[Load image from a URL]**":
+                url = st.text_input("**:blue[Image URL]**", key="url")
+                mode = "url"
+                if url:
+                    try:
+                        response = requests.get(url)
+                        if response.status_code == 200:
+                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                        else:
+                            st.error("Failed to load image from URL.")
+                    except Exception as e:
+                        st.error(f"Error loading image: {e}")
 
-                    buffered = BytesIO()
-                    enhanced_img.save(buffered, format="PNG")
-                    st.download_button(label="**Download Adjusted Image**",data=buffered,file_name="adjusted_image.png",mime="image/png",)
+            if upload_img is not None:
 
+                if mode == "upload" or mode == "camera":
+                    pil_img = Image.open(upload_img).convert("RGB")
+                elif mode == "url":
+                    pil_img = upload_img.convert("RGB")  # Since upload_img is already an Image object
+                img_arr = np.asarray(pil_img)  # Convert PIL Image to NumPy array for display
+
+                if mode == "upload":
+                    file_details = {"File Name": upload_img.name,"File Size (KB)": round(upload_img.size / 1024, 2),
+                    "Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+                else:
+                    file_details = {"File Name": "Captured Image" if mode == "camera" else os.path.basename(url),
+                    "File Size (KB)": "N/A","Format": pil_img.format,"Mode": pil_img.mode,"Width (px)": pil_img.size[0],"Height (px)": pil_img.size[1],}
+
+                st.success("Image loaded successfully!")
+                st.divider()
+                stats_expander = st.expander("**:blue[Tuner]**", expanded=False)
+                with stats_expander:
+                        brightness = st.slider("**Brightness**", 0.0, 2.0, 1.0)
+                        saturation = st.slider("**Saturation**", 0.0, 2.0, 1.0)
+                        sharpness = st.slider("**Sharpness**", 0.0, 2.0, 1.0)
+                        contrast = st.slider("**Contrast**", 0.0, 2.0, 1.0)
+                
+                if st.button("**Change Image**"):
+                    with col2:
+                        with st.container(border=True):           
+           
+                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+
+                    with col2:
+                        with st.container(border=True):  
+
+                            enhanced_img = ImageEnhance.Brightness(pil_img).enhance(brightness)
+                            enhanced_img = ImageEnhance.Color(enhanced_img).enhance(saturation)
+                            enhanced_img = ImageEnhance.Sharpness(enhanced_img).enhance(sharpness)
+                            enhanced_img = ImageEnhance.Contrast(enhanced_img).enhance(contrast)
+                            st.image(enhanced_img, use_column_width="auto", caption="Contrast Adjusted")
+                            buffered = BytesIO()
+                            enhanced_img.save(buffered, format="PNG")
+                        st.download_button(label="**📥 Download Adjusted Image**",data=buffered,file_name="adjusted_image.png",mime="image/png",)
+
+            else:
+                st.warning("Please upload/click/fetch a image file to change.")
+                
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Generate
 #---------------------------------------------------------------------------------------------------------------------------------
 
-        with tab8:
+#with tab8:
+if page == "generate":
 
-            st.write("""
-            The **Generate** tab is designed to generate new images based on the uploaded image files. 
-            You can upload or take photo using camera of load from a URL of an image and the tool will help to generate new images based on the the image file.
-            """)   
-            st.info('**Disclaimer : This portion is under Development**', icon="ℹ️") 
+    st.info("""The **Generate** tab is designed to generate new images based on the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to generate new images based on the the image file.""")   
+    st.info('**Disclaimer : This portion is under Development**', icon="ℹ️") 
