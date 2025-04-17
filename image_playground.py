@@ -180,7 +180,7 @@ if page == "view":
 
     st.info("""The **View** tab allows you to preview image files directly within the application. You can upload an image, take a photo using your camera, or load an image from a URL and view its content without any external software.""")
 
-    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    col1, col2, col3 = st.columns((0.2,0.4,0.4))
     with col1:
         with st.container(border=True):
             
@@ -258,7 +258,7 @@ if page == "view":
 if page == "crop":
 
     st.info("""The **Crop** tab is designed to crop the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to crop the image file.""") 
-    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    col1, col2, col3 = st.columns((0.2,0.4,0.4))
     with col1:
         with st.container(border=True):
             
@@ -359,7 +359,7 @@ if page == "crop":
 if page == "remove":
     
     st.info("""The **Remove** tab is designed to remove the background of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to remove the background of the image file.""") 
-    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    col1, col2, col3 = st.columns((0.2,0.4,0.4))
     with col1:
         with st.container(border=True):
             
@@ -441,7 +441,7 @@ if page == "remove":
 if page == "mirror":
 
     st.info("""The **Mirror** tab is designed to mirror the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.""")                          
-    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    col1, col2, col3 = st.columns((0.2,0.4,0.4))
     with col1:
         with st.container(border=True):
             
@@ -523,7 +523,7 @@ if page == "mirror":
 if page == "convert":
 
     st.info("""The **Convert** tab is designed to convert of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.""")                                   
-    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    col1, col2, col3 = st.columns((0.2,0.4,0.4))
     with col1:
         with st.container(border=True):
             
@@ -619,7 +619,7 @@ if page == "convert":
 if page == "rotate":
 
     st.info("""The **Rotate** tab is designed to rotate of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.""")                     
-    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    col1, col2, col3 = st.columns((0.2,0.4,0.4))
     with col1:
         with st.container(border=True):
             
@@ -703,7 +703,7 @@ if page == "rotate":
 if page == "change":
 
     st.info("""The **Change** tab is designed to change the properties of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to change the properties (e.g, brightness,saturation, sharpness, contrast) of the image file.""")                 
-    col1, col2, col3 = st.columns((0.2,0.5,0.3))
+    col1, col2, col3 = st.columns((0.2,0.4,0.4))
     with col1:
         with st.container(border=True):
             
@@ -772,7 +772,7 @@ if page == "change":
            
                             st.image(img_arr, use_container_width="auto", caption="Original Image")
 
-                    with col2:
+                    with col3:
                         with st.container(border=True):  
 
                             enhanced_img = ImageEnhance.Brightness(pil_img).enhance(brightness)
