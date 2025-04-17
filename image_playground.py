@@ -193,7 +193,7 @@ if page == "view":
                 label_visibility="collapsed", help="Uploaded images are deleted from the server when you\n""* upload another image, or\n""* clear the file uploader, or\n""* close the browser tab",)
 
             st.divider()
-            upload_img = None  # Ensure upload_img is always defined
+            upload_img = None  
             pil_img = None
             mode = None
 
@@ -213,7 +213,7 @@ if page == "view":
                     try:
                         response = requests.get(url)
                         if response.status_code == 200:
-                            upload_img = Image.open(BytesIO(response.content))  # Directly set upload_img
+                            upload_img = Image.open(BytesIO(response.content))  
                         else:
                             st.error("Failed to load image from URL.")
                     except Exception as e:
@@ -239,7 +239,7 @@ if page == "view":
                 with col2:
                     with st.container(border=True):
                 
-                        st.image(img_arr, use_column_width="auto", caption="Uploaded Image")
+                        st.image(img_arr, use_container_width="auto", caption="Uploaded Image")
         
                 with col3:
                     with st.container(border=True):
@@ -329,8 +329,8 @@ if page == "crop":
                         img = Image.fromarray(img_arr)
                         if not realtime_update:
                             st.write("**Double click to save crop**")
-                        cropped_img = st_cropper(img, realtime_update=realtime_update, box_color=box_color,aspect_ratio=aspect_ratio)
-                        #st.image(img_arr, use_column_width="auto", caption="Original Image")
+                        cropped_img = st_cropper(img,realtime_update=realtime_update,box_color=box_color,aspect_ratio=aspect_ratio)
+                        #st.image(img_arr, use_container_width="auto", caption="Original Image")
                         #cropped_img = st_cropper(Image.fromarray(img_arr), should_resize_image=True)
 
                 with col3:
@@ -338,7 +338,7 @@ if page == "crop":
                         
                         #if st.button("**Crop Image**"):
                         #st.subheader("Output", divider='blue')                      
-                        st.image(cropped_img, use_column_width="auto", caption="Cropped Image")
+                        st.image(cropped_img, use_container_width="auto", caption="Cropped Image")
                         st.write(f"Cropped width = {cropped_img.size[0]}px and height = {cropped_img.size[1]}px")
 
                         buffered = BytesIO()
@@ -418,13 +418,13 @@ if page == "remove":
                     with col2:
                         with st.container(border=True):
             
-                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+                            st.image(img_arr, use_container_width="auto", caption="Original Image")
 
                     with col3:
                         with st.container(border=True):                        
 
                             bg_removed_img = remove(pil_img)
-                            st.image(bg_removed_img, use_column_width="auto", caption="Background Removed")
+                            st.image(bg_removed_img, use_container_width="auto", caption="Background Removed")
 
                             buffered = BytesIO()
                             bg_removed_img.save(buffered, format="PNG")
@@ -500,13 +500,13 @@ if page == "mirror":
                     with col2:
                         with st.container(border=True):
             
-                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+                            st.image(img_arr, use_container_width="auto", caption="Original Image")
 
                     with col3:
                         with st.container(border=True):
                  
                             mirrored_img = ImageOps.mirror(pil_img)
-                            st.image(mirrored_img, use_column_width="auto", caption="Mirrored Image")
+                            st.image(mirrored_img, use_container_width="auto", caption="Mirrored Image")
                             buffered = BytesIO()
                             mirrored_img.save(buffered, format="PNG")
                             
@@ -585,20 +585,20 @@ if page == "convert":
                     with col2:
                         with st.container(border=True):           
            
-                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+                            st.image(img_arr, use_container_width="auto", caption="Original Image")
 
                     with col3:
                         with st.container(border=True):                           
                     
                             if conv_option == "BW":
                                 bw_img = pil_img.convert("1")  
-                                st.image(bw_img, use_column_width="auto", caption="Black & White Image")
+                                st.image(bw_img, use_container_width="auto", caption="Black & White Image")
                                 buffered = BytesIO()
                                 bw_img.save(buffered, format="PNG")
                         
                             if conv_option == "Greyscale":
                                 grey_img = pil_img.convert("L") 
-                                st.image(grey_img, use_column_width="auto", caption="Greyscale Image")
+                                st.image(grey_img, use_container_width="auto", caption="Greyscale Image")
                                 buffered = BytesIO()
                                 grey_img.save(buffered, format="PNG")
 
@@ -681,13 +681,13 @@ if page == "rotate":
                     with col2:
                         with st.container(border=True):           
            
-                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+                            st.image(img_arr, use_container_width="auto", caption="Original Image")
 
                     with col3:
                         with st.container(border=True):   
                                                     
                             rotated_img = pil_img.rotate(angle)
-                            st.image(rotated_img, use_column_width="auto", caption=f"Rotated Image by {angle} degrees")
+                            st.image(rotated_img, use_container_width="auto", caption=f"Rotated Image by {angle} degrees")
                             buffered = BytesIO()
                             rotated_img.save(buffered, format="PNG")
                         st.download_button(label="**📥 Download Rotated Image**",data=buffered,file_name="rotated_image.png",mime="image/png",)
@@ -770,7 +770,7 @@ if page == "change":
                     with col2:
                         with st.container(border=True):           
            
-                            st.image(img_arr, use_column_width="auto", caption="Original Image")
+                            st.image(img_arr, use_container_width="auto", caption="Original Image")
 
                     with col2:
                         with st.container(border=True):  
@@ -779,7 +779,7 @@ if page == "change":
                             enhanced_img = ImageEnhance.Color(enhanced_img).enhance(saturation)
                             enhanced_img = ImageEnhance.Sharpness(enhanced_img).enhance(sharpness)
                             enhanced_img = ImageEnhance.Contrast(enhanced_img).enhance(contrast)
-                            st.image(enhanced_img, use_column_width="auto", caption="Contrast Adjusted")
+                            st.image(enhanced_img, use_container_width="auto", caption="Contrast Adjusted")
                             buffered = BytesIO()
                             enhanced_img.save(buffered, format="PNG")
                         st.download_button(label="**📥 Download Adjusted Image**",data=buffered,file_name="adjusted_image.png",mime="image/png",)
