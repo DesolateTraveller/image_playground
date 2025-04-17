@@ -440,7 +440,7 @@ if page == "remove":
 #with tab4:
 if page == "mirror":
 
-    st.info("""The **Mirror** tab is designed to mirror the uploaded image files.You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.""")                          
+    st.info("""The **Mirror** tab is designed to mirror the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.""")                          
     col1, col2, col3 = st.columns((0.2,0.5,0.3))
     with col1:
         with st.container(border=True):
@@ -522,7 +522,7 @@ if page == "mirror":
 #with tab5:
 if page == "convert":
 
-    st.info("""The **Convert** tab is designed to convert of the uploaded image files.You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.""")                                   
+    st.info("""The **Convert** tab is designed to convert of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.""")                                   
     col1, col2, col3 = st.columns((0.2,0.5,0.3))
     with col1:
         with st.container(border=True):
@@ -618,7 +618,7 @@ if page == "convert":
 #with tab6:
 if page == "rotate":
 
-    st.info("""The **Rotate** tab is designed to rotate of the uploaded image files.You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.""")                     
+    st.info("""The **Rotate** tab is designed to rotate of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.""")                     
     col1, col2, col3 = st.columns((0.2,0.5,0.3))
     with col1:
         with st.container(border=True):
