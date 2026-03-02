@@ -23,18 +23,29 @@ from PIL import Image, ImageEnhance, ImageOps
 from io import BytesIO
 #----------------------------------------
 from rembg import remove
-from st_social_media_links import SocialMediaIcons
+#from st_social_media_links import SocialMediaIcons
 from streamlit_cropper import st_cropper
-from streamlit_image_comparison import image_comparison
+#from streamlit_image_comparison import image_comparison
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Title and description for your Streamlit app
 #---------------------------------------------------------------------------------------------------------------------------------
 st.set_page_config(page_title="Image Playground | v0.2",
                     layout="wide",
                     page_icon="🖼️",            
-                    initial_sidebar_state="auto")
-#----------------------------------------
-#st.title(f""":rainbow[Image Playground]""")
+                    initial_sidebar_state="collapsed")
+#---------------------------------------------------------------------------------------------------------------------------------
+### Login Page | Streamlit app
+#---------------------------------------------------------------------------------------------------------------------------------
+
+             
+#---------------------------------------------------------------------------------------------------------------------------------
+### CSS
+#---------------------------------------------------------------------------------------------------------------------------------
+
+             
+#---------------------------------------------------------------------------------------------------------------------------------
+### Description for your Streamlit app
+#---------------------------------------------------------------------------------------------------------------------------------
 st.markdown(
     """
     <style>
@@ -53,9 +64,24 @@ st.markdown(
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+    .version-badge {
+        text-align: center;
+        display: inline-block;
+        background: linear-gradient(120deg, #0056b3, #0d4a96);
+        color: white;
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 1.15rem;
+        margin-top: 8px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
     </style>
-    <div class="title-large">Image Playground</div>
-    <div class="title-small">Play with Image | v0.2</div>
+    <div style="text-align: center;">
+        <div class="title-large">Image Playground</div>
+        <div class="version-badge"> Play with Image | v0.2 </div>
+    </div>
     """,
     unsafe_allow_html=True
 )
@@ -85,102 +111,123 @@ st.markdown(
     </style>
 
     <div class="footer">
-        <p>© 2025 | Created by : <span class="highlight">Avijit Chakraborty</span> | <a href="mailto:avijit.mba18@gmail.com"> 📩 </a></p> <span class="highlight">Thank you for visiting the app | Unauthorized uses or copying is strictly prohibited | For best view of the app, please zoom out the browser to 75%.</span>
+        <p>© 2026 | Created by : <span class="highlight">Avijit Chakraborty</span> <a href="mailto:avijit.mba18@gmail.com"> 📩 </a> | <span class="highlight">Thank you for visiting the app | Unauthorized uses or copying is strictly prohibited | For best view of the app, please zoom out the browser to 75%.</span> </p>
     </div>
     """,
     unsafe_allow_html=True)
+
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Functions & Definitions
 #---------------------------------------------------------------------------------------------------------------------------------
-st.markdown(
-            """
-            <style>
-                .centered-info {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-weight: bold;
-                font-size: 15px;
-                color: #007BFF; 
-                padding: 5px;
-                background-color: #FFFFFF; 
-                border-radius: 5px;
-                border: 1px solid #007BFF;
-                margin-top: 0px;
-                margin-bottom: 10px;
-                }
-            </style>
-            """,unsafe_allow_html=True,)
+
 #---------------------------------------------------------------------------------------------------------------------------------
 ### Main app
 #---------------------------------------------------------------------------------------------------------------------------------
-with st.popover("**:red[App Capabilities]**", disabled=False, use_container_width=True): 
 
-    st.info("""
+# Initialize session state
+if 'page' not in st.session_state:
+    st.session_state.page = 'home'
 
-           - **View** -         It allows you to preview the uploaded image file directly within the application.
-           - **Crop** -         It is designed to crop the uploaded image file.
-           - **Remove** -       It helps to remove the background of the uploadedimage file.
-           - **Mirror** -       It helps create mirror of the uploaded image file.
-           - **Convert** -      It helps to convert in greyscale or black-white of the uploaded image file.
-           - **Rotate** -       It helps to rotate of the uploaded image file.
-           - **Change** -       It helps to change the brightness, saturation, contrast & sharpness of the uploaded image file.
-           - **Generate** -     It tab allows to generate a random image from the uploaded image file.                     
-
-            """)
-        
-#---------------------------------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------------------------------
-
-#st.sidebar.markdown('<div class="centered-info"><span style="margin-left: 10px;">Input</span></div>',unsafe_allow_html=True,)
+def go_home():
+    st.session_state.page = 'home'
 
 #---------------------------------------------------------------------------------------------------------------------------------
-### Content
-#---------------------------------------------------------------------------------------------------------------------------------
+if st.session_state.page == 'home':
 
-if "current_page" not in st.session_state:
-    st.session_state.current_page = "view"
+    st.markdown("""
+    <style>
+    .banner {
+        background: linear-gradient(135deg, #f0f7ff 0%, #e6f2ff 100%);
+        border-radius: 32px;
+        padding: 15px;
+        margin: 25px 0;
+        border: 1px solid rgba(0, 86, 179, 0.15);
+        text-align: center;
+        font-size: 1.15rem;
+        color: #0056b3;
+        font-weight: 600;
+    }
+    </style>
 
-col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
-with col1:
-    if st.button("**:red[View]**",use_container_width=True):
-        st.session_state.current_page = "view"
-with col2:
-    if st.button("**:red[Crop]**",use_container_width=True):
-        st.session_state.current_page = "crop"
-with col3:
-    if st.button("**:red[Remove]**",use_container_width=True):
-        st.session_state.current_page = "remove"
-with col4:
-    if st.button("**:red[Mirror]**",use_container_width=True):
-        st.session_state.current_page = "mirror"
-with col5:
-    if st.button("**:red[Convert]**",use_container_width=True):
-        st.session_state.current_page = "convert"
-with col6:
-    if st.button("**:red[Rotate]**",use_container_width=True):
-        st.session_state.current_page = "rotate"
-with col7:
-    if st.button("**:red[Change]**",use_container_width=True):
-        st.session_state.current_page = "change"
-with col8:
-    if st.button("**:red[Generate]**",use_container_width=True):
-        st.session_state.current_page = "generate"       
-        
-page = st.session_state.current_page 
-st.divider()
-#tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(["**View**","**Crop**","**Remove**","**Mirror**","**Convert**","**Rotate**","**Change**","**Generate**",])
+    <div class="banner">
+        Click the cards below to access different sections and explore the following features
+    </div>
+    """, unsafe_allow_html=True)
+    
+    def render_tool_card(col, title, icon, description, page_key, button_key):
+        with col:
+            st.markdown(f"""
+            <div class="card" style="
+                border: 1px solid #e0e0e0; 
+                border-radius: 12px; 
+                padding: 20px; 
+                height: 100%; 
+                background-color: #ffffff;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                transition: transform 0.2s, box-shadow 0.2s;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            ">
+                <div>
+                    <div class="card-title" style="
+                        font-size: 1.2em; 
+                        font-weight: 700; 
+                        margin-bottom: 12px; 
+                        color: #2c3e50;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    ">
+                        <span style="font-size: 1.4em;">{icon}</span> {title}
+                    </div>
+                    <ul class="card-list" style="list-style: none; padding: 0; margin: 0; font-size: 0.9em; color: #555;">
+                        <li>{description}</li>
+                    </ul>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button("**🚀 Click to Enter**", key=button_key, use_container_width=True, type="primary"):
+                st.session_state.page = page_key
+                st.rerun()
+
+    cols_row1 = st.columns(4)
+
+    render_tool_card(cols_row1[0], "View", "👁️", "Preview uploaded images directly within the application.", 'img_view', 'btn_img_view')
+    render_tool_card(cols_row1[1], "Crop", "✂️", "Crop images to specific dimensions easily.", 'img_crop', 'btn_img_crop')
+    render_tool_card(cols_row1[2], "Remove BG", "🧹", "Remove backgrounds from images automatically.", 'img_remove', 'btn_img_remove')
+    render_tool_card(cols_row1[3], "Mirror", "🪞", "Create mirror reflections of your images.", 'img_mirror', 'btn_img_mirror')
+
+    st.write("") # Spacer between rows
+
+    cols_row2 = st.columns(4)
+
+    render_tool_card(cols_row2[0], "Convert", "🎨", "Convert images to grayscale or black & white.", 'img_convert', 'btn_img_convert')
+    render_tool_card(cols_row2[1], "Rotate", "🔄", "Rotate images to any angle effortlessly.", 'img_rotate', 'btn_img_rotate')
+    render_tool_card(cols_row2[2], "Adjust", "🔆", "Adjust brightness, saturation, contrast & sharpness.", 'img_adjust', 'btn_img_adjust')
+    render_tool_card(cols_row2[3], "Generate", "✨", "Generate random variations from uploaded images.", 'img_generate', 'btn_img_generate')
 
 #---------------------------------------------------------------------------------------------------------------------------------
 ### View
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab1:
-if page == "view":
+#if page == "view": 
+elif st.session_state.page == 'img_view':
 
-    st.info("""The **View** tab allows you to preview image files directly within the application. You can upload an image, take a photo using your camera, or load an image from a URL and view its content without any external software.""")
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
 
-    col1, col2, col3 = st.columns((0.2,0.4,0.4))
+    with title:
+        st.info("""The **View** tab allows you to preview image files directly within the application. You can upload an image, take a photo using your camera, or load an image from a URL and view its content without any external software.""")
+
+    col1, col2, col3 = st.columns((0.15,0.45,0.4))
     with col1:
         with st.container(border=True):
             
@@ -255,10 +302,21 @@ if page == "view":
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab2:
-if page == "crop":
+#if page == "crop":
+elif st.session_state.page == 'img_crop':
 
-    st.info("""The **Crop** tab is designed to crop the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to crop the image file.""") 
-    col1, col2, col3 = st.columns((0.2,0.4,0.4))
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
+
+    with title:    
+        st.info("""The **Crop** tab is designed to crop the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to crop the image file.""") 
+        
+    col1, col2, col3 = st.columns((0.15,0.45,0.4))
     with col1:
         with st.container(border=True):
             
@@ -356,10 +414,21 @@ if page == "crop":
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab3:
-if page == "remove":
+#if page == "remove":
+elif st.session_state.page == 'img_remove':
+
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
+
+    with title:       
+        st.info("""The **Remove** tab is designed to remove the background of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to remove the background of the image file.""") 
     
-    st.info("""The **Remove** tab is designed to remove the background of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to remove the background of the image file.""") 
-    col1, col2, col3 = st.columns((0.2,0.4,0.4))
+    col1, col2, col3 = st.columns((0.15,0.45,0.4))
     with col1:
         with st.container(border=True):
             
@@ -438,10 +507,21 @@ if page == "remove":
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab4:
-if page == "mirror":
+#if page == "mirror":
+elif st.session_state.page == 'img_mirror':
 
-    st.info("""The **Mirror** tab is designed to mirror the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.""")                          
-    col1, col2, col3 = st.columns((0.2,0.4,0.4))
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
+
+    with title:       
+        st.info("""The **Mirror** tab is designed to mirror the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to mirror of the image file.""")                          
+    
+    col1, col2, col3 = st.columns((0.15,0.45,0.4))
     with col1:
         with st.container(border=True):
             
@@ -520,10 +600,21 @@ if page == "mirror":
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab5:
-if page == "convert":
+#if page == "convert":
+elif st.session_state.page == 'img_convert':
 
-    st.info("""The **Convert** tab is designed to convert of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.""")                                   
-    col1, col2, col3 = st.columns((0.2,0.4,0.4))
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
+
+    with title:       
+        st.info("""The **Convert** tab is designed to convert of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to convert of the image file to either black-&-white or greyscale.""")                                   
+    
+    col1, col2, col3 = st.columns((0.15,0.45,0.4))
     with col1:
         with st.container(border=True):
             
@@ -616,10 +707,21 @@ if page == "convert":
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab6:
-if page == "rotate":
+#if page == "rotate":
+elif st.session_state.page == 'img_rotate':
 
-    st.info("""The **Rotate** tab is designed to rotate of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.""")                     
-    col1, col2, col3 = st.columns((0.2,0.4,0.4))
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
+
+    with title:       
+        st.info("""The **Rotate** tab is designed to rotate of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to rotate of the image file.""")                     
+    
+    col1, col2, col3 = st.columns((0.15,0.45,0.4))
     with col1:
         with st.container(border=True):
             
@@ -700,10 +802,21 @@ if page == "rotate":
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab7:
-if page == "change":
+#if page == "change":
+elif st.session_state.page == 'img_adjust':
 
-    st.info("""The **Change** tab is designed to change the properties of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to change the properties (e.g, brightness,saturation, sharpness, contrast) of the image file.""")                 
-    col1, col2, col3 = st.columns((0.2,0.4,0.4))
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
+
+    with title:       
+        st.info("""The **Adjust** tab is designed to change the properties of the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to change the properties (e.g, brightness,saturation, sharpness, contrast) of the image file.""")                 
+    
+    col1, col2, col3 = st.columns((0.15,0.45,0.4))
     with col1:
         with st.container(border=True):
             
@@ -792,7 +905,18 @@ if page == "change":
 #---------------------------------------------------------------------------------------------------------------------------------
 
 #with tab8:
-if page == "generate":
+#if page == "generate":
+elif st.session_state.page == 'img_generate':
 
-    st.info("""The **Generate** tab is designed to generate new images based on the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to generate new images based on the the image file.""")   
+    st.markdown("---")      
+    col_home, title= st.columns([2,15,])
+            
+    with col_home:
+        if st.button("Home", icon="🏠", key="home_fd", type="secondary", use_container_width=True):
+            go_home()
+            st.rerun()
+
+    with title:       
+        st.info("""The **Generate** tab is designed to generate new images based on the uploaded image files. You can upload or take photo using camera of load from a URL of an image and the tool will help to generate new images based on the the image file.""")   
+    
     st.info('**Disclaimer : This portion is under Development**', icon="ℹ️") 
